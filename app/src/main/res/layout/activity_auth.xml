@@ -1,0 +1,180 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_white"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:paddingTop="30dp">
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/id_auth_loadlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="拼命加载中.."/>
+    </LinearLayout>
+
+    <!--选择-->
+
+    <ListView
+        android:visibility="gone"
+        android:id="@+id/id_auth_chooseterm_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
+
+    <!--清空账号-->
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/id_auth_haslocal_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:id="@+id/id_auth_tel" />
+        <Button
+            android:id="@+id/id_auth_parsebtn"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/app_white"
+            android:background="@drawable/authbutton_style"
+            android:text="授权解析二维码"/>
+        <Button
+            android:id="@+id/id_auth_clearbtn"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="16sp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/clearbutton_style"
+            android:text="切换登录账号"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingBottom="15dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/auth_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/border_style2">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:padding="3dp"
+                android:background="@drawable/image_corner_style"
+                android:src="@drawable/ic_super" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_account" />
+
+            <EditText
+                android:id="@+id/id_auth_number"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="超表账号（手机号）"
+                android:inputType="number"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_password" />
+
+            <EditText
+                android:id="@+id/id_auth_password"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="超表密码"
+                android:inputType="textPassword"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <TextView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/app_gray"
+        android:textSize="14sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="https://github.com/zfman"/>
+
+    <!-- 按钮 -->
+
+    <Button
+        android:id="@+id/id_auth_loginbtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/authbutton_style"
+        android:text="授权登录"
+        android:textSize="18sp"
+        android:textColor="@color/app_white" />
+</LinearLayout>
