@@ -37,6 +37,7 @@ import com.paul.simpletools.classbox.activity.AuthActivity;
 import com.paul.simpletools.classbox.model.SuperLesson;
 import com.paul.simpletools.classbox.model.SuperResult;
 import com.paul.simpletools.classbox.utils.SuperUtils;
+import com.paul.simpletools.dataBase.MessageEvent;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
 import com.zhuangfei.timetable.TimetableView;
@@ -45,6 +46,10 @@ import com.zhuangfei.timetable.listener.IWeekView;
 import com.zhuangfei.timetable.listener.OnSlideBuildAdapter;
 import com.zhuangfei.timetable.model.Schedule;
 import com.zhuangfei.timetable.view.WeekView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -79,7 +84,41 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.activity_main, container, false);
         return view;
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent messageEvent)
+    {
+        mTimetableView.isShowWeekends((messageEvent.getShow_weekend()));
+        mTimetableView.isShowNotCurWeek(messageEvent.getShow_nweek_lesson());
+        if(messageEvent.getMinnumber())
+        {
+            mTimetableView.maxSlideItem(12);
+        }
+        else
+        {
+            mTimetableView.maxSlideItem(10);
+        }
+        if(messageEvent.getShow_times())
+        {
+            String[] times = new String[]{
+                    "8:00", "8:55", "10:00", "10:55",
+                    "14:00", "14:55", "16:00", "16:55",
+                    "17:50", "18:35", "19:00", "20:00"};
+            OnSlideBuildAdapter listener = (OnSlideBuildAdapter) mTimetableView.onSlideBuildListener();
+            listener.setTimes(times)
+                    .setTimeTextColor(Color.BLACK);
+        }
+        else
+        {
+            mTimetableView.callback((ISchedule.OnSlideBuildListener) null);
+        }
+        if(!messageEvent.getBackground().equals(""))
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(messageEvent.getBackground());
+            Drawable drawable =new BitmapDrawable(getResources(),bitmap);
+            linearLayout.setBackground(drawable);
+        }
+        mTimetableView.updateView();
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -105,7 +144,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         value_curWeek=sp.getInt("curweek",1);
         if(sp.getString(MySupport.CONFIG_BG," ").equals(" "))
         {
-            Toast.makeText(getActivity(),"正常！",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(),"正常！",Toast.LENGTH_SHORT).show();
 
         }
         else
@@ -128,7 +167,14 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         {
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        EventBus.getDefault().register(this);//EventBus注册
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     public void getConfig()
     {
         SharedPreferences sp=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);

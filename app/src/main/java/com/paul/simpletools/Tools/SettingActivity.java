@@ -24,7 +24,10 @@ import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.paul.simpletools.R;
+import com.paul.simpletools.dataBase.MessageEvent;
 import com.paul.simpletools.dataBase.MySupport;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -33,11 +36,19 @@ public class SettingActivity extends AppCompatActivity {
     SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5;
     Boolean stv1,stv2,stv3,stv4;
     SharedPreferences sp;
+    MessageEvent messageEvent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        messageEvent=new MessageEvent();
         initSuperTextView();
+    }
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        EventBus.getDefault().post(messageEvent);
     }
     private void initSuperTextView()
     {
@@ -51,33 +62,37 @@ public class SettingActivity extends AppCompatActivity {
         stv_1.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                messageEvent.setShow_nweek_lesson(b);
                 stv1=b;
                 editor.putBoolean(MySupport.CONFIG_HIDELESOONS,stv1);
-                editor.commit();
+                editor.apply();
             }
         });
         stv_2.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                messageEvent.setShow_weekend(b);
                 stv2=b;
                 editor.putBoolean(MySupport.CONFIG_HIDEWEEKEND,stv2);
-                editor.commit();
+                editor.apply();
             }
         });
         stv_3.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                messageEvent.setMinnumber(b);
                 stv3=b;
                 editor.putBoolean(MySupport.CONFIG_MAXNUMBERS,stv3);
-                editor.commit();
+                editor.apply();
             }
         });
         stv_4.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                messageEvent.setShow_times(b);
                 stv4=b;
                 editor.putBoolean(MySupport.CONFIG_SHOWTIME,stv4);
-                editor.commit();
+                editor.apply();
             }
         });
         stv_5.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +180,7 @@ public class SettingActivity extends AppCompatActivity {
                         .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 String path = cursor.getString(column_index);
+                messageEvent.setBackground(path);
                 SharedPreferences sp=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
                 SharedPreferences.Editor editor=sp.edit();
                 editor.putString(MySupport.CONFIG_BG,path);
