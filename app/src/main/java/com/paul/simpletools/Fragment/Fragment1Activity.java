@@ -12,18 +12,24 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +58,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +78,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     private TimetableView mTimetableView;
     private WeekView mWeekView;
     private int value_curWeek,temp_curWeek;
-    private Button takephotoButton;
+    private ImageButton takephotoButton;
     private LinearLayout layout;
     private TextView titleTextView;
     private List<MySubject> mySubjects;
@@ -78,7 +86,6 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
 
     //记录切换的周次，不一定是当前周
     public int target = -1;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -498,7 +505,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         SimpleDateFormat formatters = new SimpleDateFormat("HH:mm");
         Date curDates = new Date(System.currentTimeMillis());// 获取当前时间
         String strs = formatters.format(curDates);
-        String[] dds = new String[] {};
+        String []dds=new String[]{};
         // 分取系统时间 小时分
         dds = strs.split(":");
         int dhs = Integer.parseInt(dds[0]);
@@ -541,7 +548,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                 }
             }
         }
-        List<MySubject> tempSubject= LessonsHelper.getHaveSubjectsWithDay(mySubjects,curweek,curday-1);
+        List<MySubject> tempSubject= LessonsHelper.getHaveSubjectsWithDay(mySubjects,curweek,curday);
         for(MySubject item:tempSubject)
         {
             if(result>=item.getStart()&&result<=(item.getStep()+item.getStart()-1))

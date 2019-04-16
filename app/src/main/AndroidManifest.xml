@@ -44,7 +44,6 @@
         <activity android:name=".Tools.ViewCourseActivity" />
         <activity android:name=".Tools.EditCourseActivity" />
         <activity android:name=".NonActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".classbox.activity.AuthActivity" />
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -126,26 +126,9 @@ public class Fragment2Activity extends Fragment {
     }
     private void UpDate()
     {
-        Bmob.initialize(getActivity(), MySupport.appkey);
-        /*Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
-        intent.setData(Uri.parse(UpdateURL)); //为Intent设置DATA属性
-        startActivity(intent);*/
-        BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
-            @Override
-            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
-                // TODO Auto-generated method stub
-                if (updateStatus == UpdateStatus.Yes) {//版本有更新
-
-                }else if(updateStatus == UpdateStatus.No){
-                    Toast.makeText(getActivity(), "已经是最新的版本了哦~", Toast.LENGTH_SHORT).show();
-                }else if(updateStatus==UpdateStatus.TimeOut){
-                    Toast.makeText(getActivity(), "查询出错或查询超时", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        //发起自动更新
-        BmobUpdateAgent.update(getActivity());
-
+        Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
+        intent.setData(Uri.parse(MySupport.UpdateURL)); //为Intent设置DATA属性
+        startActivity(intent);
     }
     private class MyListener implements SuperTextView.OnClickListener{
 
