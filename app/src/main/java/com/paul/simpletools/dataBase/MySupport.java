@@ -17,4 +17,5 @@ public class MySupport {
     public static String CONFIG_BG="config_background";
     public static int  REQUEST_IMAGE_CAPTURE = 1;
     public static int  REQUEST_TAKE_PHOTO = 1;
+    public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
 }

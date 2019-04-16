@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,8 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class PhotoActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button takePhoto;
+public class PhotoActivity extends AppCompatActivity {
     private ImageView imageView;
     private String currentPhotoPath;
     private Uri photoURI;
@@ -35,23 +35,20 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
-        takePhoto = findViewById(R.id.btn_takephto);
         imageView = findViewById(R.id.photo_show);
-
-        takePhoto.setOnClickListener(this);
         courseName=getIntent().getStringExtra("courseName");
+        takePhoto();
     }
 
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_takephto:
                 takePhoto();
                 break;
         }
-    }
+    }*/
     private void takePhoto()
     {
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -90,10 +87,12 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         if (requestCode == MySupport.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //Bundle extras = data.getExtras();
             // Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Bitmap bmp= BitmapFactory.decodeFile(currentPhotoPath);
-            Toast.makeText(PhotoActivity.this,currentPhotoPath,Toast.LENGTH_SHORT).show();
+            Bitmap bmp = BitmapFactory.decodeFile(currentPhotoPath);
+            Toast.makeText(PhotoActivity.this, currentPhotoPath, Toast.LENGTH_SHORT).show();
             imageView.setImageBitmap(bmp);
+
         }
+
     }
 
 }

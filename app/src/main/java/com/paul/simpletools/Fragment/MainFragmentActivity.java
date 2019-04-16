@@ -6,9 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 import com.paul.simpletools.R;
 public class MainFragmentActivity extends FragmentActivity {
 
@@ -79,6 +77,7 @@ public class MainFragmentActivity extends FragmentActivity {
         transaction.show(fragments[index]).commitAllowingStateLoss();
 
     }
+
 
 
 }
