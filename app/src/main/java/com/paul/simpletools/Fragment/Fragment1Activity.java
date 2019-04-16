@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -116,6 +117,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
             Bitmap bitmap = BitmapFactory.decodeFile(messageEvent.getBackground());
             Drawable drawable =new BitmapDrawable(getResources(),bitmap);
             linearLayout.setBackground(drawable);
+
         }
         mTimetableView.updateView();
     }
@@ -481,6 +483,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             }
         }
+
     }
     public String getLessons(Integer curweek)//获取当前时间对应时间段并返回课程
     {
@@ -538,7 +541,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                 }
             }
         }
-        List<MySubject> tempSubject= LessonsHelper.getHaveSubjectsWithDay(mySubjects,curweek,curday);
+        List<MySubject> tempSubject= LessonsHelper.getHaveSubjectsWithDay(mySubjects,curweek,curday-1);
         for(MySubject item:tempSubject)
         {
             if(result>=item.getStart()&&result<=(item.getStep()+item.getStart()-1))

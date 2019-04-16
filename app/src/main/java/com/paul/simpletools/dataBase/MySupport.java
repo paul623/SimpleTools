@@ -15,4 +15,6 @@ public class MySupport {
     public static String appkey="5c2fcdf15f7879bd65b8d9a9e4d26c89";
     public static String conact_qq="mqqwpa://im/chat?chat_type=wpa&uin=" + "1051786470";
     public static String CONFIG_BG="config_background";
+    public static int  REQUEST_IMAGE_CAPTURE = 1;
+    public static int  REQUEST_TAKE_PHOTO = 1;
 }

@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -21,10 +21,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Tools.UsersEditActivity"></activity>
         <activity android:name=".Tools.SettingActivity" />
-        <!--
-        <activity android:name=".Fragment.Fragment2Activity"></activity>
-        <activity android:name=".Fragment.Fragment1Activity" />
-        -->
+
         <activity
             android:name=".Fragment.MainFragmentActivity"
             android:label="@string/title_activity_main_fragment" />
@@ -49,19 +46,16 @@
         <activity android:name=".NonActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".classbox.activity.AuthActivity" />
-
-        <provider
-            android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.paul.simpletools.BmobContentProvider" />
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.paul.simpletools"
+            android:authorities="com.example.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"></meta-data>
         </provider>
+
     </application>
 
 </manifest>
