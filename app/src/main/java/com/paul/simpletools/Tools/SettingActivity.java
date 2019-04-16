@@ -170,23 +170,28 @@ public class SettingActivity extends AppCompatActivity {
         }*/
         ContentResolver resolver = getContentResolver();
         try {
-                Uri originalUri = data.getData(); // 获得图片的uri
-                MediaStore.Images.Media.getBitmap(resolver, originalUri);
-                String[] proj = { MediaStore.Images.Media.DATA };
-                @SuppressWarnings("deprecation")
-                Cursor cursor = managedQuery(originalUri, proj, null, null,
-                        null);
-                int column_index = cursor
-                        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(column_index);
-                messageEvent.setBackground(path);
-                SharedPreferences sp=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
-                SharedPreferences.Editor editor=sp.edit();
-                editor.putString(MySupport.CONFIG_BG,path);
-                editor.commit();
-                Toast.makeText(getApplicationContext(), "修改成功，重启应用方可生效！",
-                        Toast.LENGTH_SHORT).show();
+                if(data!=null) {
+                    Uri originalUri = data.getData(); // 获得图片的uri
+                    MediaStore.Images.Media.getBitmap(resolver, originalUri);
+                    String[] proj = {MediaStore.Images.Media.DATA};
+                    @SuppressWarnings("deprecation")
+                    Cursor cursor = managedQuery(originalUri, proj, null, null,
+                            null);
+                    int column_index = cursor
+                            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    String path = cursor.getString(column_index);
+                    messageEvent.setBackground(path);
+                    SharedPreferences sp = getSharedPreferences(MySupport.LOCAL_COURSE, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(MySupport.CONFIG_BG, path);
+                    editor.apply();
+                }
+                else
+                {
+                    Toast.makeText(SettingActivity.this,"操作错误或已取消",Toast.LENGTH_SHORT).show();
+                }
+
             } catch (IOException e) {
                 Log.e("TAG-->Error", e.toString());
             }
