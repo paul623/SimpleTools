@@ -40,6 +40,7 @@ import com.paul.simpletools.PhotoActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.LessonsHelper;
 import com.paul.simpletools.Tools.ViewCourseActivity;
+import com.paul.simpletools.Tools.toolsHelper;
 import com.paul.simpletools.classbox.activity.AuthActivity;
 import com.paul.simpletools.classbox.model.SuperLesson;
 import com.paul.simpletools.classbox.model.SuperResult;
@@ -151,6 +152,16 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
         String local_mySubjects=sp.getString("mySubjects"," ");
         value_curWeek=sp.getInt("curweek",1);
+        if(sp.getString("local_day"," ").equals(" "))
+        {
+            Toast.makeText(getActivity(),"哦吼",Toast.LENGTH_LONG).show();
+            value_curWeek=toolsHelper.getWeekNumber(MySupport.DATE_LOCALDATE,0);
+        }
+        else
+        {
+            String local_date=sp.getString("local_day","");
+            value_curWeek=toolsHelper.getWeekNumber(local_date,value_curWeek);
+        }
         if(sp.getString(MySupport.CONFIG_BG," ").equals(" "))
         {
             //Toast.makeText(getActivity(),"正常！",Toast.LENGTH_SHORT).show();
@@ -360,7 +371,10 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                     SharedPreferences sharedPreferences=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
                     SharedPreferences.Editor editor=sharedPreferences.edit();
                     editor.putInt("curweek",target+1);
-                    editor.commit();
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                    Date date=new Date();
+                    editor.putString("local_day",sdf.format(date));
+                    editor.apply();
                     mTimetableView.changeWeekForce(target + 1);
                 }
             }
