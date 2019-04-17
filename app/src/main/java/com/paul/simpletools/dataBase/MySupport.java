@@ -1,5 +1,10 @@
 package com.paul.simpletools.dataBase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/4/11 16：49
  * 邮箱:zhubaoluo@outlook.com
@@ -18,4 +23,5 @@ public class MySupport {
     public static int  REQUEST_IMAGE_CAPTURE = 1;
     public static int  REQUEST_TAKE_PHOTO = 1;
     public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
+    public static final String DATE_LOCALDATE="2019-02-18";
 }
