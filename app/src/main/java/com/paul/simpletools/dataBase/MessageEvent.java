@@ -5,6 +5,8 @@ package com.paul.simpletools.dataBase;
  * 邮箱:zhubaoluo@outlook.com
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
+//该类是EventBus的消息传送类，负责实现动态刷新设置
+
 public class MessageEvent {
     private Boolean show_nweek_lesson;
     private Boolean show_weekend;
