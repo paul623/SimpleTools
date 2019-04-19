@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="vertical">
         <com.allen.library.SuperTextView
+            android:id="@+id/head_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:sLeftIconRes="@drawable/timg"
@@ -16,9 +19,8 @@
             app:sLeftIconShowCircle="true"
             app:sLeftIconWidth="100dp"
             app:sLeftIconHeight="100dp"
-            app:sLeftTextString="昵称 小明"
-            app:sLeftTextSize="15sp"
-            app:sLeftBottomTextString="性别     男"
+            app:sLeftTextString="多数的错失，是因为不坚持，不努力，不挽留，然后催眠自己说一切都是命运。"
+            app:sLeftTextSize="20sp"
             app:sLeftBottomTextSize="15sp"/>
     </LinearLayout>
     <com.allen.library.SuperTextView

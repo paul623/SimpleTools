@@ -17,9 +17,11 @@ public class MySupport {
     public static String CONFIG_SHOWTIME ="config_showtime";
     public static String CONFIG_HIDEWEEKEND="config_hide_weekend";
     public static String LOCAL_COURSE="local_course";
+    public static String LOCAL_FRAGMENT2="local_fragment2";
     public static String appkey="5c2fcdf15f7879bd65b8d9a9e4d26c89";
     public static String conact_qq="mqqwpa://im/chat?chat_type=wpa&uin=" + "1051786470";
     public static String CONFIG_BG="config_background";
+    public static String CONFIG_HEAD="config_head";
     public static int  REQUEST_IMAGE_CAPTURE = 1;
     public static int  REQUEST_TAKE_PHOTO = 1;
     public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";

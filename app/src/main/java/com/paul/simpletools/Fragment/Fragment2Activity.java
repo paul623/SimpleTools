@@ -1,15 +1,23 @@
 package com.paul.simpletools.Fragment;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +29,8 @@ import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.SettingActivity;
 import com.paul.simpletools.Tools.UsersEditActivity;
 import com.paul.simpletools.dataBase.MySupport;
+
+import java.io.IOException;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.listener.BmobUpdateListener;
@@ -37,6 +47,7 @@ public class Fragment2Activity extends Fragment {
     private SuperTextView stv_checkUpdate;
     private SuperTextView stv_contact_us;
     private SuperTextView stv_helper;
+    private SuperTextView stv_header;
 
     @Nullable
     @Override
@@ -61,6 +72,14 @@ public class Fragment2Activity extends Fragment {
         stv_clear_data.setOnClickListener(myListener);
         stv_helper.setOnClickListener(myListener);
         stv_contact_us.setOnClickListener(myListener);
+        stv_header=getActivity().findViewById(R.id.head_bar);
+        stv_header.setOnClickListener(myListener);
+        SharedPreferences sp=getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2,MODE_PRIVATE);
+        if(!sp.getString(MySupport.CONFIG_HEAD," ").equals(" ")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(sp.getString(MySupport.CONFIG_HEAD," "));
+            Drawable drawable =new BitmapDrawable(getResources(),bitmap);
+            stv_header.setLeftIcon(drawable);
+        }
     }
     private void contactUs()
     {
@@ -130,6 +149,7 @@ public class Fragment2Activity extends Fragment {
         intent.setData(Uri.parse(MySupport.UpdateURL)); //为Intent设置DATA属性
         startActivity(intent);
     }
+
     private class MyListener implements SuperTextView.OnClickListener{
 
         @Override
@@ -155,8 +175,48 @@ public class Fragment2Activity extends Fragment {
                 case R.id.stv_clearData:
                     clearLocalData();
                     break;
+                case R.id.head_bar:
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, 2);
+                    break;
             }
 
         }
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ContentResolver resolver = getActivity().getContentResolver();
+        try {
+            if(data!=null) {
+                Uri originalUri = data.getData(); // 获得图片的uri
+                MediaStore.Images.Media.getBitmap(resolver, originalUri);
+                String[] proj = {MediaStore.Images.Media.DATA};
+                @SuppressWarnings("deprecation")
+                Cursor cursor = getActivity().managedQuery(originalUri, proj, null, null,
+                        null);
+                int column_index = cursor
+                        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                String path = cursor.getString(column_index);
+                Bitmap bitmap = BitmapFactory.decodeFile(path);
+                Drawable drawable =new BitmapDrawable(getResources(),bitmap);
+                stv_header.setLeftIcon(drawable);
+                SharedPreferences sp = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(MySupport.CONFIG_BG, path);
+                editor.apply();
+            }
+            else
+            {
+                Toast.makeText(getActivity(),"操作错误或已取消",Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (IOException e) {
+            Log.e("TAG-->Error", e.toString());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
+
+
