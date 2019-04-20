@@ -49,6 +49,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         messageEvent=new MessageEvent();
+        InitEventBus();
         initSuperTextView();
     }
     @Override
@@ -157,6 +158,18 @@ public class SettingActivity extends AppCompatActivity {
         stv_3.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_MAXNUMBERS,false));
         stv_4.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false));
         stv_6.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_TUISONG,false));
+    }
+    void InitEventBus()
+    {
+        sp=this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
+        messageEvent.setHour(sp.getInt(MySupport.CONFIG_TUUISONG_HOUR,7));
+        messageEvent.setMinute(sp.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0));
+        messageEvent.setTuisong(sp.getBoolean(MySupport.CONFIG_TUISONG,false));
+        messageEvent.setBackground(sp.getString(MySupport.CONFIG_BG,""));
+        messageEvent.setShow_times(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false));
+        messageEvent.setShow_weekend(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,false));
+        messageEvent.setShow_nweek_lesson(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
+
     }
     /*private class mySwitchListener implements SuperTextView.OnSwitchCheckedChangeListener
     {

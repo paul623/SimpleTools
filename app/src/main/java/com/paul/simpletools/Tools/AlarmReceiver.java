@@ -80,8 +80,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setAutoCancel(true);
         NotificationCompat.BigTextStyle bigTextStyle=new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle("叮~每日提醒来啦")
-                .setSummaryText("继续加油！！！！")
-                .bigText("");
+                .setSummaryText("今天您有"+subjects.size()+"节课")
+                .bigText(today_lessons);
         builder.setStyle(bigTextStyle);
         manager.notify(value_curWeek, builder.build());
     }
