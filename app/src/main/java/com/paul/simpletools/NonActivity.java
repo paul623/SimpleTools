@@ -102,7 +102,7 @@ public class NonActivity extends AppCompatActivity {
         schedules.addAll(getHaveSubjectsWithDay(getData(),7,2));
         adapter.notifyDataSetChanged();
     }
-    public static List<MySubject> getHaveSubjectsWithDay(List<MySubject> scheduleList, int curWeek, int day) {
+    public static final List<MySubject> getHaveSubjectsWithDay(List<MySubject> scheduleList, int curWeek, int day) {
         List<MySubject> subjectBeanList = getAllSubjectsWithDay(scheduleList, day);
         List<MySubject> result = new ArrayList<>();
         for (MySubject bean : subjectBeanList) {
@@ -112,16 +112,16 @@ public class NonActivity extends AppCompatActivity {
         }
         return result;
     }
-    public static boolean isThisWeek(MySubject subject, int cur_week) {
+    public static final boolean isThisWeek(MySubject subject, int cur_week) {
         List<Integer> weekList = subject.getWeekList();
         if (weekList.indexOf(cur_week) != -1) return true;
         return false;
     }
-    public static List<MySubject> getAllSubjectsWithDay(List<MySubject> scheduleList, int day) {
+    public static final List<MySubject> getAllSubjectsWithDay(List<MySubject> scheduleList, int day) {
         List<MySubject> subjectBeanList = splitSubjectWithDay(scheduleList)[day];
         return subjectBeanList;
     }
-    public static List<MySubject>[] splitSubjectWithDay(List<MySubject> dataSource) {
+    public static final List<MySubject>[] splitSubjectWithDay(List<MySubject> dataSource) {
         List<MySubject>[] data = new ArrayList[7];
         if (dataSource == null) return data;
         for (int i = 0; i < data.length; i++) {
@@ -135,11 +135,11 @@ public class NonActivity extends AppCompatActivity {
         sortList(data);
         return data;
     }
-    public static void sortList(List<MySubject>[] data) {
+    public static final void sortList(List<MySubject>[] data) {
         for (int i = 0; i < data.length; i++)
             sortList(data[i]);
     }
-    public static void sortList(List<MySubject> data) {
+    public static final void sortList(List<MySubject> data) {
         int min;
         MySubject tmp;
         for (int m = 0; m < data.size() - 1; m++) {
