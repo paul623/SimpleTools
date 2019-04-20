@@ -12,6 +12,12 @@ import java.util.Date;
  */
 public class toolsHelper {
 
+    public static int getWeekNumber(String local_day) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = format.parse(local_day);
+        Date date2 = new Date();
+        return differentDays(date,date2);
+    }
     public static int getWeekNumber(String local_date,int curWeek)
     {
 

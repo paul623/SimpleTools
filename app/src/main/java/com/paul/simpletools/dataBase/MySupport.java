@@ -1,5 +1,8 @@
 package com.paul.simpletools.dataBase;
 
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,4 +29,10 @@ public class MySupport {
     public static int  REQUEST_TAKE_PHOTO = 1;
     public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
     public static final String DATE_LOCALDATE="2019-02-18";
+    public static final String REQUEST_WORDS="http://open.iciba.com/dsapi/";
+    public static final String LOCAL_TOMATO="local_tamato";
+    public static final String LOCAL_WORDS="local_words";
+    public static final String LOCAL_WORDS_DATE="lcoal_words_date";
+
+
 }
