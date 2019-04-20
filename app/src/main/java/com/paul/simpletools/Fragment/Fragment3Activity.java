@@ -58,9 +58,10 @@ public class Fragment3Activity extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        indexView(); //跳转到indexView()
+
         sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE,Context.MODE_PRIVATE);
         x=sp.getInt(MySupport.LOCAL_TOMATO,0);
+        indexView(); //跳转到indexView()
 
     }
     /**
@@ -162,8 +163,8 @@ public class Fragment3Activity extends Fragment implements View.OnClickListener 
                     sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor=sp.edit();
                     x=x+1;
-                    editor.putInt(MySupport.LOCAL_TOMATO,x);
                     show_time.setText("您累计得到了"+x+"个番茄");
+                    editor.putInt(MySupport.LOCAL_TOMATO,x);
                     editor.apply();
                 }
             }

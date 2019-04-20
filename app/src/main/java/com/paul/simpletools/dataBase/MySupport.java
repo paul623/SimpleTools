@@ -19,6 +19,9 @@ public class MySupport {
     public static String CONFIG_MAXNUMBERS="config_max_numbers";
     public static String CONFIG_SHOWTIME ="config_showtime";
     public static String CONFIG_HIDEWEEKEND="config_hide_weekend";
+    public static String CONFIG_TUISONG="config_tuisong";
+    public static String CONFIG_TUUISONG_HOUR="config_tuisong_hour";
+    public static String CONFIG_TUUISONG_MINUTE="config_tuisong_minute";
     public static String LOCAL_COURSE="local_course";
     public static String LOCAL_FRAGMENT2="local_fragment2";
     public static String appkey="5c2fcdf15f7879bd65b8d9a9e4d26c89";

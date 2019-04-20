@@ -74,6 +74,34 @@
         android:background="#ffffff"
         />
     <com.allen.library.SuperTextView
+        android:id="@+id/stv_6"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftViewMarginLeft="15dp"
+        app:sLeftTextString="每日提醒"
+        app:sLeftTextSize="16sp"
+        android:paddingLeft="10dp"
+        app:sBottomDividerLineMarginLeft="13dp"
+        app:sDividerLineColor="#CFCFCF"
+        app:sRightViewType="switchBtn"
+        app:sUseRipple="false"
+        android:background="#ffffff"
+        />
+    <com.allen.library.SuperTextView
+        android:id="@+id/stv_7"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftViewMarginLeft="15dp"
+        app:sLeftTextString="推送时间设置"
+        app:sLeftTextSize="16sp"
+        android:paddingLeft="10dp"
+        app:sBottomDividerLineMarginLeft="12dp"
+        app:sDividerLineColor="#CFCFCF"
+        app:sRightIconRes="@drawable/icon_right"
+        app:sRightIconHeight="20dp"
+        app:sRightIconWidth="30dp"
+        />
+    <com.allen.library.SuperTextView
         android:id="@+id/stv_5"
         android:layout_width="match_parent"
         android:layout_height="60dp"

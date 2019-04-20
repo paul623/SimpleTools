@@ -1,6 +1,8 @@
 package com.paul.simpletools.Fragment;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paul.simpletools.PhotoActivity;
 import com.paul.simpletools.R;
+import com.paul.simpletools.Tools.AlarmReceiver;
 import com.paul.simpletools.Tools.LessonsHelper;
 import com.paul.simpletools.Tools.ViewCourseActivity;
 import com.paul.simpletools.Tools.toolsHelper;
@@ -67,8 +70,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
 import cn.bmob.v3.update.BmobUpdateAgent;
 
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 public class Fragment1Activity extends Fragment implements View.OnClickListener {
@@ -84,6 +90,8 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     private TextView titleTextView;
     private List<MySubject> mySubjects;
     private LinearLayout linearLayout;
+    private Boolean cantuisong;
+    private Integer tuisong_hour,tuisong_minute;
 
     //记录切换的周次，不一定是当前周
     public int target = -1;
@@ -96,6 +104,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MessageEvent messageEvent)
     {
+        cantuisong=messageEvent.getTuisong();
         mTimetableView.isShowWeekends((messageEvent.getShow_weekend()));
         mTimetableView.isShowNotCurWeek(messageEvent.getShow_nweek_lesson());
         if(messageEvent.getMinnumber())
@@ -128,6 +137,10 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
 
         }
         mTimetableView.updateView();
+        tuisong_hour=messageEvent.getHour();
+        tuisong_minute=messageEvent.getMinute();
+        setReminder(false);
+        setReminder(cantuisong);
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -189,6 +202,50 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         EventBus.getDefault().register(this);//EventBus注册
+        SharedPreferences sharedPreferences=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
+        tuisong_hour=sharedPreferences.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
+        tuisong_minute=sharedPreferences.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
+        setReminder(cantuisong);
+
+    }
+    private void setReminder(boolean b) {
+        Calendar mCalendar;
+        //得到日历实例，主要是为了下面的获取时间
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        //获取当前毫秒值
+        long systemTime = System.currentTimeMillis();
+
+        //是设置日历的时间，主要是让日历的年月日和当前同步
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
+        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        //设置在几点提醒  设置的为7点
+        mCalendar.set(Calendar.HOUR_OF_DAY, tuisong_hour);
+        //设置在几分提醒  设置的为00分
+        mCalendar.set(Calendar.MINUTE, tuisong_minute);
+        //下面这两个看字面意思也知道
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.MILLISECOND, 0);
+        //上面设置的就是7点0分的时间点
+        //获取上面设置的7点0分的毫秒值
+        long selectTime = mCalendar.getTimeInMillis();
+
+        // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
+        if(systemTime > selectTime) {
+            mCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        AlarmManager am= (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        // 创建将执行广播的PendingIntent
+        PendingIntent pi= PendingIntent.getBroadcast(getActivity(), 0, new Intent(getActivity(), AlarmReceiver.class), 0);
+        if(b){
+            //am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pi);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), (1000 * 60 * 60 * 24), pi);
+        }
+        else{
+            // cancel current alarm
+            am.cancel(pi);
+        }
     }
     @Override
     public void onDestroy() {
@@ -201,6 +258,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         SharedPreferences sp=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
         mTimetableView.isShowWeekends(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,false));
         mTimetableView.isShowNotCurWeek(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
+        cantuisong=sp.getBoolean(MySupport.CONFIG_TUISONG,false);
         if(sp.getBoolean(MySupport.CONFIG_MAXNUMBERS,false))
         {
             mTimetableView.maxSlideItem(12);

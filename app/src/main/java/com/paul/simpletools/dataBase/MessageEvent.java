@@ -13,14 +13,35 @@ public class MessageEvent {
     private Boolean minnumber;
     private Boolean show_times;
     private String background;
+    private Boolean tuisong;
+    private Integer hour;
 
-    public MessageEvent(Boolean show_nweek_lesson,Boolean show_weekend,Boolean minnumber,Boolean show_times,String background)
+    public Integer getHour() {
+        return hour;
+    }
+
+    public void setHour(Integer hour) {
+        this.hour = hour;
+    }
+
+    public Integer getMinute() {
+        return minute;
+    }
+
+    public void setMinute(Integer minute) {
+        this.minute = minute;
+    }
+
+    private Integer minute;
+
+    public MessageEvent(Boolean show_nweek_lesson,Boolean show_weekend,Boolean minnumber,Boolean show_times,String background,Boolean tuisong)
     {
         this.show_nweek_lesson=show_nweek_lesson;
         this.show_times=show_times;
         this.minnumber=minnumber;
         this.show_weekend=show_weekend;
         this.background=background;
+        this.tuisong=tuisong;
     }
     public MessageEvent()
     {
@@ -66,5 +87,12 @@ public class MessageEvent {
     public void setBackground(String background)
     {
         this.background=background;
+    }
+    public Boolean getTuisong() {
+        return tuisong;
+    }
+
+    public void setTuisong(Boolean tuisong) {
+        this.tuisong = tuisong;
     }
 }
