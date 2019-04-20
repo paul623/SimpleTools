@@ -13,6 +13,7 @@ public class MainFragmentActivity extends FragmentActivity {
     private BottomNavigationView bottomNavigationView;
     private  Fragment1Activity fragment1;
     private Fragment2Activity fragment2;
+    private Fragment3Activity fragment3;
     private Fragment[] fragments;
     private int lastfragment;//用于记录上个选择的Fragment
     @Override
@@ -27,10 +28,15 @@ public class MainFragmentActivity extends FragmentActivity {
 
         fragment1 = new Fragment1Activity();
         fragment2 = new Fragment2Activity();
-        fragments = new Fragment[]{fragment1,fragment2};
+        fragment3=new Fragment3Activity();
+        fragments = new Fragment[]{fragment1,fragment3,fragment2};
         lastfragment=0;
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainview,fragment1).show(fragment1).commit();
-        bottomNavigationView=(BottomNavigationView)findViewById(R.id.navigation);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainview,fragment1)
+                .show(fragment1)
+                .commit();
+        bottomNavigationView=findViewById(R.id.navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(changeFragment);
     }
@@ -53,6 +59,15 @@ public class MainFragmentActivity extends FragmentActivity {
                 }
                 case R.id.navigation_notifications:
                 {
+                    if(lastfragment!=2)
+                    {
+                        switchFragment(lastfragment,2);
+                        lastfragment=2;
+                    }
+                    return true;
+                }
+                case R.id.navigation_note:
+                {
                     if(lastfragment!=1)
                     {
                         switchFragment(lastfragment,1);
@@ -60,6 +75,7 @@ public class MainFragmentActivity extends FragmentActivity {
                     }
                     return true;
                 }
+
             }
             return false;
         }
@@ -77,6 +93,7 @@ public class MainFragmentActivity extends FragmentActivity {
         transaction.show(fragments[index]).commitAllowingStateLoss();
 
     }
+
 
 
 

@@ -131,6 +131,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        linearLayout=getView().findViewById(R.id.ly_classtable);
         super.onActivityCreated(savedInstanceState);
         takephotoButton=getView().findViewById(R.id.btn_photo);
         takephotoButton.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +147,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         layout.setOnClickListener(this);
         mWeekView = getView().findViewById(R.id.id_weekview);
         mTimetableView = getView().findViewById(R.id.id_timetableView);
-        linearLayout=getView().findViewById(R.id.ly_classtable);
+
         //List<SuperLesson> superLesson=(List<SuperLesson>) getIntent().getSerializableExtra("SuperLessons");
         //mySubjects=changeLesson(superLesson);
         SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
@@ -154,7 +155,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         value_curWeek=sp.getInt("curweek",1);
         if(sp.getString("local_day"," ").equals(" "))
         {
-            Toast.makeText(getActivity(),"哦吼",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(),"哦吼",Toast.LENGTH_LONG).show();
             value_curWeek=toolsHelper.getWeekNumber(MySupport.DATE_LOCALDATE,0);
         }
         else
