@@ -1,5 +1,6 @@
 package com.paul.simpletools;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paul.simpletools.Adapter.NonViewAdapter;
 import com.paul.simpletools.R;
+import com.paul.simpletools.Tools.SettingActivity;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.SubjectRepertory;
 import com.zhuangfei.timetable.model.Schedule;
@@ -79,9 +81,9 @@ public class NonActivity extends AppCompatActivity {
         popup.show();
     }
 
-    public List<MySubject> getData() {
+    public static List<MySubject> getData(Context context) {
         List<MySubject> mySubjects;
-        SharedPreferences sp=this.getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
+        SharedPreferences sp=context.getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
         String local_mySubjects=sp.getString("mySubjects"," ");
         Gson gson=new Gson();
         mySubjects=gson.fromJson(local_mySubjects,new TypeToken<List<MySubject>>(){}.getType());
@@ -93,17 +95,17 @@ public class NonActivity extends AppCompatActivity {
      */
     protected void all() {
         schedules.clear();
-        schedules.addAll(getData());
+        schedules.addAll(getData(NonActivity.this));
         adapter.notifyDataSetChanged();
     }
     private void chooseDay()
     {
         schedules.clear();
-        schedules.addAll(getHaveSubjectsWithDay(getData(),7,2));
+        schedules.addAll(getHaveSubjectsWithDay(getData(NonActivity.this),7,2));
         adapter.notifyDataSetChanged();
     }
     public static final List<MySubject> getHaveSubjectsWithDay(List<MySubject> scheduleList, int curWeek, int day) {
-        List<MySubject> subjectBeanList = getAllSubjectsWithDay(scheduleList, day);
+        List<MySubject> subjectBeanList = getAllSubjectsWithDay(scheduleList, day-1);
         List<MySubject> result = new ArrayList<>();
         for (MySubject bean : subjectBeanList) {
             if (isThisWeek(bean, curWeek)) {

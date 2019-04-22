@@ -2,6 +2,10 @@ package com.paul.simpletools.Tools;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,11 +14,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +33,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.paul.simpletools.Fragment.MainFragmentActivity;
+import com.paul.simpletools.NonActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.dataBase.MessageEvent;
 import com.paul.simpletools.dataBase.MySubject;
@@ -35,7 +45,10 @@ import com.paul.simpletools.dataBase.MySupport;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -112,9 +125,11 @@ public class SettingActivity extends AppCompatActivity {
         stv_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
+                /*Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 1);*/
+                sendMessage();
+
 
             }
         });
@@ -171,65 +186,11 @@ public class SettingActivity extends AppCompatActivity {
         messageEvent.setShow_nweek_lesson(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
 
     }
-    /*private class mySwitchListener implements SuperTextView.OnSwitchCheckedChangeListener
-    {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                switch (compoundButton.getId()){
-                    case R.id.stv_1:
-                        stv1=b;
-                        Toast.makeText(SettingActivity.this,"选中1",Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.stv_2:
-                        stv2=b;
-                        Toast.makeText(SettingActivity.this,"选中2",Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.stv_3:
-                        stv3=b;
-                        Toast.makeText(SettingActivity.this,"选中3",Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.stv_4:
-                        stv4=b;
-                        Toast.makeText(SettingActivity.this,"选中4",Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                saveSettings();
-        }
-    }*/
-    /*private void saveSettings()
-    {
-        sp=this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
-        SharedPreferences.Editor editor=sp.edit();
-        editor.putBoolean(MySupport.CONFIG_HIDELESOONS,stv1);
-        editor.putBoolean(MySupport.CONFIG_HIDEWEEKEND,stv2);
-        editor.putBoolean(MySupport.CONFIG_MAXNUMBERS,stv3);
-        editor.putBoolean(MySupport.CONFIG_SHOWTIME,stv4);
-        editor.commit();
-    }*/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        /*super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1&& resultCode == Activity.RESULT_OK
-                && data != null)
-        {
-            Uri selectedImage = data.getData();//返回的是uri
 
-
-            String [] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String path = cursor.getString(columnIndex);
-            SharedPreferences sp=getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
-            SharedPreferences.Editor editor=sp.edit();
-            editor.putString(MySupport.CONFIG_BG,path);
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            LinearLayout layout1=findViewById(R.id.ly_classtable);
-
-            Drawable drawable =new BitmapDrawable(getResources(),bitmap);
-            layout1.setBackground(drawable);
-        }*/
         ContentResolver resolver = getContentResolver();
         try {
                 if(data!=null) {
@@ -281,6 +242,61 @@ public class SettingActivity extends AppCompatActivity {
         }
         return out;
     }
+    void sendMessage()
+    {
+        SharedPreferences sharedPreferences=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
+        int value_curWeek=sharedPreferences.getInt(MySupport.LOCAL_CURWEEK,1);
+        int curday=toolsHelper.getTodayWeek();
+        List<MySubject> subjects=new ArrayList<>();
+        subjects.addAll(NonActivity.getHaveSubjectsWithDay(NonActivity.getData(SettingActivity.this),value_curWeek,curday));
+        //Toast.makeText(context, "闹铃响了, 可以做点事情了~~", Toast.LENGTH_LONG).show();
+
+        NotificationManager manager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+        //例如这个id就是你传过来的
+        String id="simpletools";
+        //MainActivity是你点击通知时想要跳转的Activity
+        Intent playIntent = new Intent(SettingActivity.this, MainFragmentActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(SettingActivity.this, 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String today_lessons="";
+        for(MySubject mySubject:subjects)
+        {
+            today_lessons=today_lessons+mySubject.getName()+" 地点:"+mySubject.getRoom()+" 节数"+mySubject.getStart()+"~"+(mySubject.getStart()+mySubject.getStep()-1)+"\n";
+        }
+        if(today_lessons.equals(""))
+        {
+            today_lessons="太棒了！今天没有课~好好放松放松吧~";
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(SettingActivity.this,id);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel1 = new NotificationChannel(id,"课表拍拍专用", NotificationManager.IMPORTANCE_HIGH);
+            channel1.setDescription("用来通知课程等等");
+            ///配置通知出现时的闪灯（如果 android 设备支持的话）
+            channel1.enableLights(true);
+            channel1.setLightColor(Color.WHITE);
+            //配置通知出现时的震动（如果 android 设备支持的话）
+            channel1.enableVibration(true);
+            channel1.enableLights(true); //是否在桌面icon右上角展示小红点
+            channel1.setLightColor(Color.RED); //小红点颜色
+            channel1.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
+            channel1.setLockscreenVisibility(Notification.VISIBILITY_SECRET);//设置在锁屏界面上显示这条通知
+            manager.createNotificationChannel(channel1);
+        }
+        builder .setSmallIcon(R.mipmap.ic_launcher)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationCompat.BigTextStyle bigTextStyle=new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle("叮~每日提醒来啦")
+                .setSummaryText("今天您有"+subjects.size()+"节课")
+                .bigText(today_lessons);
+        builder.setStyle(bigTextStyle);
+
+        manager.notify(value_curWeek, builder.build());
+    }
+
+
+
 }
 
 
