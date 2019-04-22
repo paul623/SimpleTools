@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
@@ -20,6 +21,7 @@ public class ViewCourseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_view_course);
         List<Schedule> superLesson = (List<Schedule>) getIntent().getSerializableExtra("SuperLessons");
         Integer date = getIntent().getIntExtra("date", 0);
@@ -32,6 +34,7 @@ public class ViewCourseActivity extends Activity {
         }
         initView();
         setView(superLesson);
+
         //display(superLesson);
     }
 

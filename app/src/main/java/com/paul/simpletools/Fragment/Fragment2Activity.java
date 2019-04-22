@@ -1,5 +1,6 @@
 package com.paul.simpletools.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,7 +57,8 @@ public class Fragment2Activity extends Fragment {
     private SuperTextView stv_helper;
     private SuperTextView stv_header;
     private Handler handler;
-
+    private Integer iCount = 0;
+    private ProgressDialog pDialog = null;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -137,7 +139,7 @@ public class Fragment2Activity extends Fragment {
     }
     private void clearLocalData()
     {
-        final AlertDialog.Builder normalDialog =
+        /*final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(getActivity());
         normalDialog.setIcon(R.mipmap.ic_launcher);
         normalDialog.setTitle("停！确认删除本地数据吗？");
@@ -150,11 +152,13 @@ public class Fragment2Activity extends Fragment {
                         SharedPreferences.Editor editor=sp.edit();
                         editor.clear();
                         editor.apply();
-                        SharedPreferences ss=getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2,MODE_PRIVATE);
+                        SharedPreferences ss=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
                         SharedPreferences.Editor editor1=ss.edit();
                         editor1.clear();
                         editor1.apply();
+
                         Toast.makeText(getActivity(),"数据清理完毕！",Toast.LENGTH_SHORT).show();
+                        delay(3000);
                         Intent intent = new Intent(getActivity(), LaunchActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -168,7 +172,8 @@ public class Fragment2Activity extends Fragment {
                         Toast.makeText(getActivity(),"吓死我了···",Toast.LENGTH_SHORT).show();
                     }
                 });
-        normalDialog.show();
+        normalDialog.show();*/
+        showprocess();
 
     }
     private void UpDate()
@@ -289,6 +294,62 @@ public class Fragment2Activity extends Fragment {
             }
 
         }
+    private void delay(int ms){
+        try {
+            Thread.currentThread();
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    void showprocess()
+    {
+
+        pDialog= new ProgressDialog(getActivity());
+        pDialog.setTitle("缓存清理");
+        pDialog.setIcon(R.mipmap.ic_launcher);
+        pDialog.setMessage("本地缓存正在清理中，请稍后将自动重启应用");
+        pDialog.setCancelable(false);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.show();
+
+        // 创建线程实例
+        new Thread() {
+            public void run() {
+                SharedPreferences sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
+                SharedPreferences.Editor editor=sp.edit();
+                editor.clear();
+                editor.apply();
+                sp=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
+                editor=sp.edit();
+                editor.clear();
+                editor.apply();
+                sp=getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2,MODE_PRIVATE);
+                editor=sp.edit();
+                editor.clear();
+                editor.apply();
+                try {
+                    while (iCount <= 50) {
+                        // 由线程来控制进度。
+                        pDialog.setProgress(iCount++);
+                        Thread.sleep(80);
+                    }
+                    //Toast.makeText(getActivity(),"数据清理完毕！",Toast.LENGTH_SHORT).show();
+                    pDialog.cancel();
+                    Intent intent = new Intent(getActivity(), LaunchActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+
+                } catch (InterruptedException e) {
+                    pDialog.cancel();
+                }
+            }
+
+        }.start();
+
+    }
+
 
 }
 

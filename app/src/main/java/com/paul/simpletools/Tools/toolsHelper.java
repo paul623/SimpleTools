@@ -96,5 +96,22 @@ public class toolsHelper {
             return day2-day1;
         }
     }
+    public  static int getTodayWeek()
+    {
+        Date today = new Date();
+        Calendar c=Calendar.getInstance();
+        c.setTime(today);
+        int weekday=c.get(Calendar.DAY_OF_WEEK);
+        int curday;
+        if(weekday==1)//1代表星期日
+        {
+            curday=7;
+        }
+        else
+        {
+            curday=weekday-1;
+        }
+        return curday;
+    }
 
 }

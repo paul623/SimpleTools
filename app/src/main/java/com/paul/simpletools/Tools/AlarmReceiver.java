@@ -1,12 +1,14 @@
 package com.paul.simpletools.Tools;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,41 +30,21 @@ import java.util.List;
  */
 public class AlarmReceiver extends BroadcastReceiver {
     private NotificationManager manager;
-    private SharedPreferences sp;
 
     //当BroadcastReceiver接收到Intent广播时调用。
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        sp=context.getSharedPreferences(MySupport.LOCAL_COURSE,Context.MODE_PRIVATE);
-        String local_mySubjects=sp.getString("mySubjects","");
-        Gson gson=new Gson();
-        List<MySubject> mySubjects=gson.fromJson(local_mySubjects,new TypeToken<List<MySubject>>(){}.getType());
-        int value_curWeek=sp.getInt("curweek",1);
-        Date today = new Date();
-        Calendar c=Calendar.getInstance();
-        c.setTime(today);
-        int weekday=c.get(Calendar.DAY_OF_WEEK);
-        int curday;
-        if(weekday==1)//1代表星期日
-        {
-            curday=7;
-        }
-        else
-        {
-            curday=weekday-1;
-        }
+        SharedPreferences sharedPreferences=context.getSharedPreferences(MySupport.LOCAL_COURSE,Context.MODE_PRIVATE);
+        int value_curWeek=sharedPreferences.getInt(MySupport.LOCAL_CURWEEK,1);
+        int curday=toolsHelper.getTodayWeek();
         List<MySubject> subjects=new ArrayList<>();
-        subjects.addAll(NonActivity.getHaveSubjectsWithDay(mySubjects,value_curWeek,curday));
-        //Toast.makeText(context, "闹铃响了, 可以做点事情了~~", Toast.LENGTH_LONG).show();
-
+        subjects.addAll(NonActivity.getHaveSubjectsWithDay(NonActivity.getData(context),value_curWeek,curday));
         manager = (NotificationManager)context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         //例如这个id就是你传过来的
-        String id = intent.getStringExtra("id");
-        id= "0";
+        String id="simpletools";
         //MainActivity是你点击通知时想要跳转的Activity
         Intent playIntent = new Intent(context, MainFragmentActivity.class);
-        playIntent.putExtra("id", id);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         String today_lessons="";
         for(MySubject mySubject:subjects)
@@ -73,7 +55,22 @@ public class AlarmReceiver extends BroadcastReceiver {
         {
             today_lessons="太棒了！今天没有课~好好放松放松吧~";
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"default");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,id);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel1 = new NotificationChannel(id,"课表拍拍专用", NotificationManager.IMPORTANCE_HIGH);
+            channel1.setDescription("用来通知课程等等");
+            ///配置通知出现时的闪灯（如果 android 设备支持的话）
+            channel1.enableLights(true);
+            channel1.setLightColor(Color.WHITE);
+            //配置通知出现时的震动（如果 android 设备支持的话）
+            channel1.enableVibration(true);
+            channel1.enableLights(true); //是否在桌面icon右上角展示小红点
+            channel1.setLightColor(Color.RED); //小红点颜色
+            channel1.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
+            channel1.setLockscreenVisibility(Notification.VISIBILITY_SECRET);//设置在锁屏界面上显示这条通知
+            manager.createNotificationChannel(channel1);
+        }
         builder .setSmallIcon(R.mipmap.ic_launcher)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
@@ -83,6 +80,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setSummaryText("今天您有"+subjects.size()+"节课")
                 .bigText(today_lessons);
         builder.setStyle(bigTextStyle);
+
         manager.notify(value_curWeek, builder.build());
     }
 

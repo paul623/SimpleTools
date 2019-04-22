@@ -15,6 +15,7 @@ public class MainFragmentActivity extends FragmentActivity {
     private Fragment2Activity fragment2;
     private Fragment3Activity fragment3;
     private Fragment[] fragments;
+
     private int lastfragment;//用于记录上个选择的Fragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
