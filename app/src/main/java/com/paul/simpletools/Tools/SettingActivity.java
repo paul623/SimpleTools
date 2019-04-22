@@ -125,11 +125,9 @@ public class SettingActivity extends AppCompatActivity {
         stv_5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(Intent.ACTION_PICK);
+                Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent, 1);*/
-                sendMessage();
-
+                startActivityForResult(intent, 1);
 
             }
         });
