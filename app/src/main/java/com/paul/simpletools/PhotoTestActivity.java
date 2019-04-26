@@ -3,6 +3,7 @@ package com.paul.simpletools;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.baidu.ocr.sdk.OCR;
+import com.baidu.ocr.sdk.OnResultListener;
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.AccessToken;
+import com.baidu.ocr.sdk.model.GeneralBasicParams;
+import com.baidu.ocr.sdk.model.GeneralResult;
+import com.baidu.ocr.sdk.model.WordSimple;
 import com.paul.simpletools.dataBase.MySupport;
 
 import java.io.BufferedOutputStream;
@@ -54,6 +63,7 @@ public class PhotoTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo);
         courseName=getIntent().getStringExtra("courseName");
         Log.d(TAG, "开始...");
+        initOCR();
         imageView=findViewById(R.id.photo_show);
         // android 7.0系统解决拍照的问题
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -72,6 +82,7 @@ public class PhotoTestActivity extends AppCompatActivity {
 
             startCamera();
         }
+
     }
 
     /**
@@ -133,6 +144,7 @@ public class PhotoTestActivity extends AppCompatActivity {
                 + "/" + MySupport.SD_APP_DIR_NAME + "/" +MySupport.PHOTO_DIR_NAME + "/", mImageName);
         //将图片的绝对路径设置给mImagePath，后面会用到
         mImagePath = mImageFile.getAbsolutePath();
+        Log.d("你好",mImagePath);
         //按设置好的目录层级创建
         mImageFile.getParentFile().mkdirs();
         Log.d(TAG, "按设置的目录层级创建图片文件，路径："+mImagePath);
@@ -177,6 +189,7 @@ public class PhotoTestActivity extends AppCompatActivity {
                     //更新系统图库
                     updateSystemGallery();
                     Log.d(TAG, "结束。");
+                    getOCR(mImagePath);
                     break;
 
                 }
@@ -236,6 +249,77 @@ public class PhotoTestActivity extends AppCompatActivity {
         this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + mImagePath)));
         Log.d(TAG, "通知系统图库更新。");
     }
+
+    void initOCR()
+    {
+        OCR.getInstance(this).initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+            @Override
+            public void onResult(AccessToken result) {
+                String token = result.getAccessToken();
+                Log.d("百度初始化","成功！");
+            }
+
+            @Override
+            public void onError(OCRError error)
+            {
+                Log.d("百度初始化",error.getCause().toString());
+                error.printStackTrace();
+            }
+        }, this.getApplicationContext(), "GeB7fIW57MSqx3zk3ZGZxujG", "9PA9AmpiEvd7UOxZo8giEouIbaDfdcGa");
+
+    }
+    public void getOCR(String filePath) {
+        // 通用文字识别参数设置
+        GeneralBasicParams param = new GeneralBasicParams();
+        param.setDetectDirection(true);
+        //这里调用的是本地文件，使用时替换成你的本地文件
+        File file=new File(filePath);
+        Log.d("百度",filePath);
+        param.setImageFile(file);
+        // 调用通用文字识别服务
+        OCR.getInstance(this).recognizeAccurateBasic(param, new OnResultListener<GeneralResult>() {
+            @Override
+            public void onResult(GeneralResult result) {
+                StringBuilder sb = new StringBuilder();
+                // 调用成功，返回GeneralResult对象
+                for (WordSimple wordSimple : result.getWordList()) {
+                    // wordSimple不包含位置信息
+                    WordSimple word = wordSimple;
+                    sb.append(word.getWords());
+                    //sb.append("\n");
+                }
+                //file.delete();
+                //String返回
+                showAlterDialog(sb.toString());
+
+                // json格式返回字符串result.getJsonRes())
+            }
+            @Override
+            public void onError(OCRError error) {
+                // 调用失败，返回OCRError对象
+                //Log.d("百度",error.getCause().toString());
+                Toast.makeText(PhotoTestActivity.this,"识别失败！！！",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    private void showAlterDialog(String message){
+        final AlertDialog.Builder alterDiaglog = new AlertDialog.Builder(PhotoTestActivity.this);
+        alterDiaglog.setIcon(R.mipmap.ic_launcher);//图标
+        alterDiaglog.setTitle("文字识别结果");//文字
+        alterDiaglog.setMessage(message);//提示消息
+        //积极的选择
+        alterDiaglog.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(PhotoTestActivity.this,"哈哈百度无敌(#^.^#)",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //显示
+        alterDiaglog.show();
+    }
+
 
 
 
