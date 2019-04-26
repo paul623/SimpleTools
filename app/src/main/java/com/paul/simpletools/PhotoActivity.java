@@ -75,9 +75,8 @@ public class PhotoActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("MMdd_HHmm").format(new Date());
         String imageFileName = "课表拍拍_" + courseName+"_"+timeStamp;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
+        //File storageDir = Environment.getExternalStorageDirectory();
         File image=new File(storageDir,imageFileName+".jpg");
-
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
@@ -89,6 +88,7 @@ public class PhotoActivity extends AppCompatActivity {
             // Bitmap imageBitmap = (Bitmap) extras.get("data");
             Bitmap bmp = BitmapFactory.decodeFile(currentPhotoPath);
             Toast.makeText(PhotoActivity.this, currentPhotoPath, Toast.LENGTH_SHORT).show();
+
             imageView.setImageBitmap(bmp);
 
         }

@@ -9,7 +9,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-feature android:name="android.permission.CAMERA" />
 
     <application
@@ -20,6 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PhotoTestActivity"/>
         <activity android:name=".Tools.UsersEditActivity" />
         <activity android:name=".Tools.SettingActivity" />
         <activity
@@ -41,25 +43,26 @@
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".Tools.ViewCourseActivity"
-            android:theme="@android:style/Theme.Holo.Dialog"/>
+        <activity
+            android:name=".Tools.ViewCourseActivity"
+            android:theme="@android:style/Theme.Holo.Dialog" />
         <activity android:name=".Tools.EditCourseActivity" />
         <activity android:name=".NonActivity" />
         <activity android:name=".classbox.activity.AuthActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.android.fileprovider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <receiver
             android:name=".Tools.AlarmReceiver"
-            android:process=":remote"
-            />
+            android:process=":remote" />
     </application>
 
 </manifest>
