@@ -52,7 +52,7 @@ import java.util.List;
 
 public class SettingActivity extends AppCompatActivity {
 
-    SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7;
+    SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7,stv_8;
     Boolean stv1,stv2,stv3,stv4,stv6;
     SharedPreferences sp;
     MessageEvent messageEvent;
@@ -80,6 +80,7 @@ public class SettingActivity extends AppCompatActivity {
         stv_5=findViewById(R.id.stv_5);//背景设置
         stv_6=findViewById(R.id.stv_6);//推送设置
         stv_7=findViewById(R.id.stv_7);//推送时间设置
+        stv_8=findViewById(R.id.stv_8);//推送设置
         sp=this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
         hour=sp.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
         minute=sp.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
@@ -164,6 +165,12 @@ public class SettingActivity extends AppCompatActivity {
                 stv6=b;
                 editor.putBoolean(MySupport.CONFIG_TUISONG,stv6);
                 editor.apply();
+            }
+        });
+        stv_8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
             }
         });
         stv_1.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));

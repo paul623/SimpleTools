@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paul.simpletools.PhotoActivity;
+import com.paul.simpletools.PhotoTestActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.AlarmReceiver;
 import com.paul.simpletools.Tools.LessonsHelper;
@@ -151,7 +153,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         takephotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), PhotoActivity.class);
+                Intent intent=new Intent(getActivity(), PhotoTestActivity.class);
                 intent.putExtra("courseName",getLessons(value_curWeek));
                 startActivity(intent);
             }
@@ -573,7 +575,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     }
     public String getLessons(Integer curweek)//获取当前时间对应时间段并返回课程
     {
-        String courseName="错误百出";
+        String courseName="";
         int curday;
         Calendar calendar=Calendar.getInstance();
         String[] times = new String[]{
@@ -589,6 +591,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         dds = strs.split(":");
         int dhs = Integer.parseInt(dds[0]);
         int dms = Integer.parseInt(dds[1]);
+        Log.d("课表",dhs+":"+dms);
         Date today = new Date();
         Calendar c=Calendar.getInstance();
         c.setTime(today);
@@ -601,6 +604,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         {
             curday=weekday-1;
         }
+        Log.d("课表","curday:"+curday);
         int result=-1;
         for(int i=0;i<times.length-1;i++)
         {
@@ -615,18 +619,23 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
             int eth = Integer.parseInt(etime[0]);//小时
             int etm = Integer.parseInt(etime[1]);//分
 
-            if (sth <= dhs && dhs <= eth)
-            {
-                if (sth == dhs && stm <= dms) {
-                    result=i+1;
-                    break;
-                }
-                else if (dhs == eth && etm >= dms) {
-                    result=i+1;
-                    break;
-                }
+            if (sth == dhs&&stm<=dms) {
+                result=i+1;
+                break;
             }
+            else if (dhs == eth&&etm >= dms)
+            {
+                result=i+1;
+                break;
+            }
+            else if(dhs>sth&&dhs<eth)
+            {
+                result=i+1;
+                break;
+            }
+
         }
+        Log.d("课表","result="+result+"");
         List<MySubject> tempSubject= LessonsHelper.getHaveSubjectsWithDay(mySubjects,curweek,curday);
         for(MySubject item:tempSubject)
         {
