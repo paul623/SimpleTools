@@ -52,7 +52,6 @@ public class LaunchActivity extends AppCompatActivity {
             }
         }).start();
 
-
     }
 }
 
