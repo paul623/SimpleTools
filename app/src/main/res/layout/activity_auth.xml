@@ -87,7 +87,7 @@
             android:layout_height="130dp"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@drawable/border_style2">
+            android:background="@drawable/border_style">
 
             <ImageView
                 android:layout_width="80dp"
