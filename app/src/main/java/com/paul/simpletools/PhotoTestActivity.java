@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
@@ -44,6 +47,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PhotoTestActivity extends AppCompatActivity {
+    private Button button;
+    private TextView textView;
     private static final String TAG = "PhotoTestActivity";
 
     private String mImagePath;                   //用于存储最终目录，即根目录 / 要操作（存储文件）的文件夹
@@ -65,6 +70,20 @@ public class PhotoTestActivity extends AppCompatActivity {
         Log.d(TAG, "开始...");
         initOCR();
         imageView=findViewById(R.id.photo_show);
+        button=findViewById(R.id.btn_photo);
+        textView=findViewById(R.id.tv_photo_bar);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOCR(mImagePath);
+            }
+        });
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PhotoTestActivity.this.finish();
+            }
+        });
         // android 7.0系统解决拍照的问题
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -178,8 +197,9 @@ public class PhotoTestActivity extends AppCompatActivity {
                     try {
                         //根据uri设置bitmap
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri);
-                        imageView.setImageBitmap(bitmap);
-                        Toast.makeText(PhotoTestActivity.this,mImageUri.getPath(),Toast.LENGTH_SHORT).show();
+
+                        imageView.setImageBitmap(rotaingImageView(readPictureDegree(mImagePath),bitmap));
+                        //Toast.makeText(PhotoTestActivity.this,mImageUri.getPath(),Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "根据uri设置bitmap。");
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -189,7 +209,6 @@ public class PhotoTestActivity extends AppCompatActivity {
                     //更新系统图库
                     updateSystemGallery();
                     Log.d(TAG, "结束。");
-                    getOCR(mImagePath);
                     break;
 
                 }
@@ -321,6 +340,46 @@ public class PhotoTestActivity extends AppCompatActivity {
     }
 
 
+    /*
+     * 旋转图片
+     * @param angle
+     * @param bitmap
+     * @return Bitmap
+     */
+    public Bitmap rotaingImageView(int angle , Bitmap bitmap) {
+        //旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        // 创建新的图片
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    /**
+     * 读取图片属性：旋转的角度
+     * @param path 图片绝对路径
+     * @return degree旋转的角度
+     */
+    public int readPictureDegree(String path) {
+        int degree  = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
 
 
 }

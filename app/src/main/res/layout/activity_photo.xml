@@ -3,9 +3,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_photo_bar"
+            android:text="拍照界面"
+            android:drawableLeft="@drawable/icon_left"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/photo_show"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="600dp" />
+    <Button
+        android:id="@+id/btn_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="文字识别"
+        android:textSize="20sp"/>
 
 </LinearLayout>

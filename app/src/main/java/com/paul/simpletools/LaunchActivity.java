@@ -20,20 +20,22 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)//透明状态栏
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // 创建状态栏的管理实例
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            // 激活状态栏设置
+            tintManager.setStatusBarTintEnabled(true);
+            // 激活导航栏设置
+            tintManager.setNavigationBarTintEnabled(true);
+            // 设置一个颜色给系统栏
+            tintManager.setTintColor(Color.parseColor("#EE6AA7"));
+
+            //Request();
         }
-        // 创建状态栏的管理实例
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        // 激活状态栏设置
-        tintManager.setStatusBarTintEnabled(true);
-        // 激活导航栏设置
-        tintManager.setNavigationBarTintEnabled(true);
-        // 设置一个颜色给系统栏
-        tintManager.setTintColor(Color.parseColor("#EE6AA7"));
         setContentView(R.layout.activity_launch);
-        //Request();
         new Thread(new Runnable() {
             @Override
             public void run() {
