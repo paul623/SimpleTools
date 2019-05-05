@@ -190,7 +190,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         stv_1.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
-        stv_2.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,false));
+        stv_2.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         stv_3.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_MAXNUMBERS,false));
         stv_4.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false));
         stv_6.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_TUISONG,false));
@@ -203,7 +203,7 @@ public class SettingActivity extends AppCompatActivity {
         messageEvent.setTuisong(sp.getBoolean(MySupport.CONFIG_TUISONG,false));
         messageEvent.setBackground(sp.getString(MySupport.CONFIG_BG,""));
         messageEvent.setShow_times(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false));
-        messageEvent.setShow_weekend(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,false));
+        messageEvent.setShow_weekend(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         messageEvent.setShow_nweek_lesson(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
 
     }

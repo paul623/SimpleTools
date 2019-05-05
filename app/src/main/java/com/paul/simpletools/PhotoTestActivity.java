@@ -316,7 +316,7 @@ public class PhotoTestActivity extends AppCompatActivity {
             @Override
             public void onError(OCRError error) {
                 // 调用失败，返回OCRError对象
-                //Log.d("百度",error.getCause().toString());
+                Log.d("百度",error.getCause().toString());
                 Toast.makeText(PhotoTestActivity.this,"识别失败！！！",Toast.LENGTH_SHORT).show();
             }
         });

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,7 +36,7 @@ public class UsersEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_edit);
         LitePal.initialize(this);
-        List<String> words=new ArrayList<>();
+        final List<String> words=new ArrayList<>();
         final List<EveryDayBean> everyDayBeans=LitePal.findAll(EveryDayBean.class);
         for(EveryDayBean item:everyDayBeans)
         {
@@ -55,7 +56,21 @@ public class UsersEditActivity extends AppCompatActivity {
             Drawable drawable =new BitmapDrawable(getResources(),bitmap);
             linearLayout.setBackground(drawable);
         }
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+                ClipboardManager clipboard = (ClipboardManager)getSystemService(UsersEditActivity.CLIPBOARD_SERVICE);
+                //创建ClipData对象
+                //第一个参数只是一个标记，随便传入。
+                //第二个参数是要复制到剪贴版的内容
+                ClipData clip = ClipData.newPlainText("课表拍拍",words.get(position).toString() );
+                //传入clipdata对象.
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(UsersEditActivity.this,"内容已复制到剪贴板！",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
