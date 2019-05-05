@@ -14,13 +14,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,18 +25,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.paul.simpletools.PhotoActivity;
 import com.paul.simpletools.PhotoTestActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.AlarmReceiver;
@@ -63,9 +53,8 @@ import com.zhuangfei.timetable.view.WeekView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.LitePal;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,7 +67,6 @@ import cn.bmob.v3.update.BmobUpdateAgent;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
-import static com.paul.simpletools.dataBase.MySupport.LOCAL_CURWEEK;
 
 public class Fragment1Activity extends Fragment implements View.OnClickListener {
     public static final int REQUEST_IMPORT=1;
@@ -149,6 +137,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         linearLayout=getView().findViewById(R.id.ly_classtable);
         super.onActivityCreated(savedInstanceState);
+        LitePal.initialize(getContext());//初始化dataBase
         takephotoButton=getView().findViewById(R.id.btn_photo);
         takephotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +156,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         //List<SuperLesson> superLesson=(List<SuperLesson>) getIntent().getSerializableExtra("SuperLessons");
         //mySubjects=changeLesson(superLesson);
         SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
-        String local_mySubjects=sp.getString("mySubjects"," ");
+        Boolean local_mySubjects=sp.getBoolean(MySupport.LOCAL_COURSE_DATABASE,false);//标记是否已经存储
         value_curWeek=sp.getInt("curweek",1);
         if(sp.getString("local_day"," ").equals(" "))
         {
@@ -196,12 +185,13 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         }
         temp_curWeek=value_curWeek;
         Request();
-        if(local_mySubjects.equals(" ")){
+        if(!local_mySubjects){
             toAuth();
         }
         else {
-            Gson gson=new Gson();
-            mySubjects=gson.fromJson(local_mySubjects,new TypeToken<List<MySubject>>(){}.getType());
+            //Gson gson=new Gson();
+            //mySubjects=gson.fromJson(local_mySubjects,new TypeToken<List<MySubject>>(){}.getType());
+            mySubjects=LitePal.findAll(MySubject.class);
             initTimetableView();
         }
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
@@ -264,7 +254,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     public void getConfig()
     {
         SharedPreferences sp=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
-        mTimetableView.isShowWeekends(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,false));
+        mTimetableView.isShowWeekends(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         mTimetableView.isShowNotCurWeek(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
         cantuisong=sp.getBoolean(MySupport.CONFIG_TUISONG,false);
         if(sp.getBoolean(MySupport.CONFIG_MAXNUMBERS,false))
@@ -304,12 +294,20 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
             if(scanResult.isSuccess())
             {
                 mySubjects=changeLesson(scanResult.getLessons());
-                Gson gson=new Gson();
+                /*Gson gson=new Gson();
                 String a=gson.toJson(changeLesson(scanResult.getLessons()));
                 SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
                 SharedPreferences.Editor editor=sp.edit();
                 editor.putString("mySubjects",a);
-                editor.commit();
+                editor.commit();*/
+                for(MySubject item:mySubjects)
+                {
+                    item.save();
+                }
+                SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
+                SharedPreferences.Editor editor=sp.edit();
+                editor.putBoolean(MySupport.LOCAL_COURSE_DATABASE,true);
+                editor.apply();
                 initTimetableView();//初始化课程表
             }
             else{
@@ -350,7 +348,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
 
         mTimetableView.source(mySubjects)
                 .curWeek(value_curWeek)
-                .curTerm("大二下学期")
+                .curTerm(mySubjects.get(0).getTerm())
                 .maxSlideItem(12)
                 .monthWidthDp(40)
                 //透明度

@@ -2,6 +2,8 @@ package com.paul.simpletools.dataBase;
 import com.zhuangfei.timetable.model.Schedule;
 import com.zhuangfei.timetable.model.ScheduleEnable;
 
+import org.litepal.crud.LitePalSupport;
+
 import java.util.List;
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/3/27 21：46
@@ -9,7 +11,7 @@ import java.util.List;
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
 
-public class MySubject implements ScheduleEnable {
+public class MySubject extends LitePalSupport implements ScheduleEnable{
 
     public static final String EXTRAS_ID="extras_id";
 

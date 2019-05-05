@@ -18,6 +18,8 @@ import com.paul.simpletools.R;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,12 +36,12 @@ public class AlarmReceiver extends BroadcastReceiver {
     //当BroadcastReceiver接收到Intent广播时调用。
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        LitePal.initialize(context);
         SharedPreferences sharedPreferences=context.getSharedPreferences(MySupport.LOCAL_COURSE,Context.MODE_PRIVATE);
         int value_curWeek=sharedPreferences.getInt(MySupport.LOCAL_CURWEEK,1);
         int curday=toolsHelper.getTodayWeek();
         List<MySubject> subjects=new ArrayList<>();
-        subjects.addAll(NonActivity.getHaveSubjectsWithDay(NonActivity.getData(context),value_curWeek,curday));
+        subjects.addAll(NonActivity.getHaveSubjectsWithDay(LitePal.findAll(MySubject.class),value_curWeek,curday));
         manager = (NotificationManager)context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         //例如这个id就是你传过来的
         String id="simpletools";

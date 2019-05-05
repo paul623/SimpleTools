@@ -27,7 +27,6 @@
         <activity
             android:name=".Fragment.MainFragmentActivity"
             android:label="@string/title_activity_main_fragment" />
-        <activity android:name=".PhotoActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"

@@ -23,6 +23,7 @@ public class MySupport {
     public static String CONFIG_TUUISONG_HOUR="config_tuisong_hour";
     public static String CONFIG_TUUISONG_MINUTE="config_tuisong_minute";
     public static String LOCAL_COURSE="local_course";//本地存储，存储课程信息
+    public static String LOCAL_COURSE_DATABASE="local_course_data_base";
     public static String LOCAL_FRAGMENT2="local_fragment2";//本地存储，负责记录头像、每日一句等信息
     public static String appkey="5c2fcdf15f7879bd65b8d9a9e4d26c89";
     public static String conact_qq="mqqwpa://im/chat?chat_type=wpa&uin=" + "1051786470";//跳转QQ
@@ -33,6 +34,8 @@ public class MySupport {
     public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
     public static final String DATE_LOCALDATE="2019-02-18";
     public static final String REQUEST_WORDS="http://open.iciba.com/dsapi/";
+    public static final String REQUEST_WORDS2="https://v1.hitokoto.cn/";
+    public static final String REQUEST_STATUS="request_status";
     public static final String LOCAL_TOMATO="local_tamato";
     public static final String LOCAL_WORDS="local_words";
     public static final String LOCAL_WORDS_DATE="lcoal_words_date";
@@ -45,5 +48,6 @@ public class MySupport {
     public static final int PHOTO_RESULT_CODE = 100;        //标志符，图片的结果码，判断是哪一个Intent
     public static final int VOICE_RESULT_CODE = 101;        //标志符，音频的结果码，判断是哪一个Intent
     public static final int VIDEO_RESULT_CODE = 102;        //标志符，视频的结果码，判断是哪一个Intent
+    public static final String[] REQUEST_STATUS_SELECTORS = new String[]{"双语","随机","动漫","漫画","游戏","小说","原创","网络","其他"};
 
 }

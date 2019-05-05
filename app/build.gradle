@@ -56,4 +56,5 @@ dependencies {
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation files('libs/ocr-sdk.jar')
+    implementation 'org.litepal.android:java:3.0.0'
 }
