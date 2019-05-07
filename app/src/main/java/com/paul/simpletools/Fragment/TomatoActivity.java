@@ -24,7 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Fragment3Activity extends Fragment implements View.OnClickListener {
+public class TomatoActivity extends Fragment implements View.OnClickListener {
     //定义TextView对象
     private TextView tv,show_time;
     //定义Buttn对象

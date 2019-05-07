@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class MySupport {
     public static int  REQUEST_IMAGE_CAPTURE = 1;
     public static int  REQUEST_TAKE_PHOTO = 1;
     public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
-    public static final String DATE_LOCALDATE="2019-02-18";
+    public static final String DATE_LOCALDATE="date_localdate";
     public static final String REQUEST_WORDS="http://open.iciba.com/dsapi/";
     public static final String REQUEST_WORDS2="https://v1.hitokoto.cn/";
     public static final String REQUEST_STATUS="request_status";
@@ -49,5 +50,5 @@ public class MySupport {
     public static final int VOICE_RESULT_CODE = 101;        //标志符，音频的结果码，判断是哪一个Intent
     public static final int VIDEO_RESULT_CODE = 102;        //标志符，视频的结果码，判断是哪一个Intent
     public static final String[] REQUEST_STATUS_SELECTORS = new String[]{"双语","随机","动漫","漫画","游戏","小说","原创","网络","其他"};
-
+    public static final String CHOOSE_TERM_STATUS="choose_term_status";
 }

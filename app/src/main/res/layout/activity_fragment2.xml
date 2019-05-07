@@ -130,13 +130,11 @@
             app:sBottomDividerLineMarginLeft="54dp"
             app:sDividerLineColor="#CFCFCF"
             />
-        <com.allen.library.SuperTextView
-            android:layout_marginTop="20dp"
+        <TextView
+            android:layout_marginTop="100dp"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:sCenterTextString="学期切换"
-            app:sCenterTextSize="20dp"
-            app:sCenterTextColor="@color/colorRed"
-            />
+            android:layout_height="wrap_content"
+            android:text="我是有底线的喵！！！"
+            android:gravity="center"/>
     </LinearLayout>
 </ScrollView>

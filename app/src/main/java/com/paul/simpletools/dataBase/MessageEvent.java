@@ -1,5 +1,7 @@
 package com.paul.simpletools.dataBase;
 
+import java.util.List;
+
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/4/15 23：28
  * 邮箱:zhubaoluo@outlook.com
@@ -15,7 +17,15 @@ public class MessageEvent {
     private String background;
     private Boolean tuisong;
     private Integer hour;
-
+    private List<MySubject> mySubjects;
+    public List<MySubject> getMySubjects()
+    {
+        return mySubjects;
+    }
+    public void setMySubjects(List<MySubject> mySubjectList)
+    {
+        mySubjects=mySubjectList;
+    }
     public Integer getHour() {
         return hour;
     }

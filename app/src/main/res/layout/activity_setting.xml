@@ -78,12 +78,55 @@
             app:sUseRipple="false"
             android:background="#ffffff"
             />
+
         <com.allen.library.SuperTextView
-            android:id="@+id/stv_8"
+            android:id="@+id/stv_10"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:sLeftViewMarginLeft="15dp"
-            app:sLeftTextString="推送测试"
+            app:sLeftTextString="学期切换"
+            app:sLeftTextSize="16sp"
+            android:paddingLeft="10dp"
+            app:sBottomDividerLineMarginLeft="12dp"
+            app:sDividerLineColor="#CFCFCF"
+            app:sRightIconRes="@drawable/icon_right"
+            app:sRightIconHeight="20dp"
+            app:sRightIconWidth="30dp"
+            />
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_13"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftViewMarginLeft="15dp"
+            app:sLeftTextString="学期管理"
+            app:sLeftTextSize="16sp"
+            android:paddingLeft="10dp"
+            app:sBottomDividerLineMarginLeft="12dp"
+            app:sDividerLineColor="#CFCFCF"
+            app:sRightIconRes="@drawable/icon_right"
+            app:sRightIconHeight="20dp"
+            app:sRightIconWidth="30dp"
+            />
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_11"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftViewMarginLeft="15dp"
+            app:sLeftTextString="开学时间设置"
+            app:sLeftTextSize="16sp"
+            android:paddingLeft="10dp"
+            app:sBottomDividerLineMarginLeft="12dp"
+            app:sDividerLineColor="#CFCFCF"
+            app:sRightIconRes="@drawable/icon_right"
+            app:sRightIconHeight="20dp"
+            app:sRightIconWidth="30dp"
+            />
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_12"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftViewMarginLeft="15dp"
+            app:sLeftTextString="课程时间设置"
             app:sLeftTextSize="16sp"
             android:paddingLeft="10dp"
             app:sBottomDividerLineMarginLeft="12dp"
@@ -106,6 +149,7 @@
             app:sRightIconHeight="20dp"
             app:sRightIconWidth="30dp"
             />
+
         <com.allen.library.SuperTextView
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -127,6 +171,20 @@
             app:sRightViewType="switchBtn"
             app:sUseRipple="false"
             android:background="#ffffff"
+            />
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_8"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftViewMarginLeft="15dp"
+            app:sLeftTextString="推送测试"
+            app:sLeftTextSize="16sp"
+            android:paddingLeft="10dp"
+            app:sBottomDividerLineMarginLeft="12dp"
+            app:sDividerLineColor="#CFCFCF"
+            app:sRightIconRes="@drawable/icon_right"
+            app:sRightIconHeight="20dp"
+            app:sRightIconWidth="30dp"
             />
         <com.allen.library.SuperTextView
             android:id="@+id/stv_7"

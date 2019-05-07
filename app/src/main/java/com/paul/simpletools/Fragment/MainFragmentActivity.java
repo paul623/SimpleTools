@@ -11,9 +11,9 @@ import com.paul.simpletools.R;
 public class MainFragmentActivity extends FragmentActivity {
 
     private BottomNavigationView bottomNavigationView;
-    private  Fragment1Activity fragment1;
-    private Fragment2Activity fragment2;
-    private Fragment3Activity fragment3;
+    private CourseActivity fragment1;
+    private MineActivity fragment2;
+    private TomatoActivity fragment3;
     private Fragment[] fragments;
 
     private int lastfragment;//用于记录上个选择的Fragment
@@ -27,9 +27,9 @@ public class MainFragmentActivity extends FragmentActivity {
     private void initFragment()
     {
 
-        fragment1 = new Fragment1Activity();
-        fragment2 = new Fragment2Activity();
-        fragment3=new Fragment3Activity();
+        fragment1 = new CourseActivity();
+        fragment2 = new MineActivity();
+        fragment3=new TomatoActivity();
         fragments = new Fragment[]{fragment1,fragment3,fragment2};
         lastfragment=0;
         getSupportFragmentManager()

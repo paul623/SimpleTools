@@ -57,4 +57,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation files('libs/ocr-sdk.jar')
     implementation 'org.litepal.android:java:3.0.0'
+    implementation 'com.weigan:loopView:0.1.2'
+
 }

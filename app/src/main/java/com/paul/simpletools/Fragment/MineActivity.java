@@ -32,11 +32,13 @@ import com.paul.simpletools.LaunchActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.LoadInternet;
 import com.paul.simpletools.Tools.SettingActivity;
+import com.paul.simpletools.Tools.TermsManageActivity;
 import com.paul.simpletools.Tools.UsersEditActivity;
 import com.paul.simpletools.Tools.toolsHelper;
 import com.paul.simpletools.dataBase.EveryDayBean;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
+import com.paul.simpletools.dataBase.TermData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,7 +57,7 @@ import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class Fragment2Activity extends Fragment {
+public class MineActivity extends Fragment {
     private SuperTextView stv_mine_users;
     private SuperTextView stv_mine_setting;
     private SuperTextView stv_clear_data;
@@ -187,7 +190,7 @@ public class Fragment2Activity extends Fragment {
                     }
                 });
         normalDialog.show();*/
-        showprocess();
+        showConfirmDialog();
 
     }
 
@@ -369,6 +372,11 @@ public class Fragment2Activity extends Fragment {
                 if (LitePal.findAll(EveryDayBean.class) != null) {
                     LitePal.deleteAll(EveryDayBean.class);
                 }
+                if(LitePal.findAll(TermData.class)!=null)
+                {
+                    LitePal.deleteAll(TermData.class);
+                    Log.d("Mine","删除啦");
+                }
                 try {
                     while (iCount <= 50) {
                         // 由线程来控制进度。
@@ -454,7 +462,31 @@ public class Fragment2Activity extends Fragment {
         everyDayBean.save();
         return praseResult;
     }
+    void showConfirmDialog()
+    {
+        final android.app.AlertDialog.Builder normalDialog =
+                new android.app.AlertDialog.Builder(getContext());
+        normalDialog.setIcon(R.mipmap.ic_launcher);
+        normalDialog.setTitle("警告");
+        normalDialog.setMessage("确认删除本地数据吗？删除后不可恢复！"+"\n"+"包括：设置、课表和番茄");
+        normalDialog.setPositiveButton("确认",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showprocess();
+                    }
 
+
+                });
+        normalDialog.setNegativeButton("手滑了~",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(),"吓死我了···",Toast.LENGTH_SHORT).show();
+                    }
+                });
+        normalDialog.show();
+    }
 
 }
 

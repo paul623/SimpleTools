@@ -68,7 +68,7 @@ import cn.bmob.v3.update.BmobUpdateAgent;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
-public class Fragment1Activity extends Fragment implements View.OnClickListener {
+public class CourseActivity extends Fragment implements View.OnClickListener {
     public static final int REQUEST_IMPORT=1;
     private static final String LOCAL_COURSE="local_course";
     private static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
@@ -83,9 +83,9 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
     private LinearLayout linearLayout;
     private Boolean cantuisong;
     private Integer tuisong_hour,tuisong_minute;
-
     //记录切换的周次，不一定是当前周
     public int target = -1;
+    String termData="";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -127,11 +127,18 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
             linearLayout.setBackground(drawable);
 
         }
+        if(messageEvent.getMySubjects()!=null)
+        {
+            mWeekView.source(messageEvent.getMySubjects());
+            mTimetableView.source(messageEvent.getMySubjects());
+            mWeekView.updateView();
+        }
         mTimetableView.updateView();
         tuisong_hour=messageEvent.getHour();
         tuisong_minute=messageEvent.getMinute();
         setReminder(false);
         setReminder(cantuisong);
+
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -156,12 +163,15 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         //List<SuperLesson> superLesson=(List<SuperLesson>) getIntent().getSerializableExtra("SuperLessons");
         //mySubjects=changeLesson(superLesson);
         SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
+        termData=sp.getString(MySupport.CHOOSE_TERM_STATUS,"@@");
+        Log.d("CourseActivity","term:"+termData);
         Boolean local_mySubjects=sp.getBoolean(MySupport.LOCAL_COURSE_DATABASE,false);//标记是否已经存储
         value_curWeek=sp.getInt("curweek",1);
         if(sp.getString("local_day"," ").equals(" "))
         {
             //Toast.makeText(getActivity(),"哦吼",Toast.LENGTH_LONG).show();
-            value_curWeek=toolsHelper.getWeekNumber(MySupport.DATE_LOCALDATE,0);
+            String date=sp.getString(MySupport.DATE_LOCALDATE,"2019-02-18");
+            value_curWeek=toolsHelper.getWeekNumber(date,0);
 
         }
         else
@@ -191,7 +201,18 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         else {
             //Gson gson=new Gson();
             //mySubjects=gson.fromJson(local_mySubjects,new TypeToken<List<MySubject>>(){}.getType());
-            mySubjects=LitePal.findAll(MySubject.class);
+            if(!termData.equals("@@"))
+            {
+                mySubjects=LitePal.where("term=?",termData).find(MySubject.class);
+                Log.d("CourseActivity","正在匹配！！！！");
+            }
+           else
+            {
+                mySubjects=LitePal.findAll(MySubject.class);
+                termData=mySubjects.get(0).getTerm();
+                editor.putString(MySupport.CHOOSE_TERM_STATUS,termData);
+                editor.apply();
+            }
             initTimetableView();
         }
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
@@ -204,46 +225,49 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         tuisong_hour=sharedPreferences.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
         tuisong_minute=sharedPreferences.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
         setReminder(cantuisong);
-
+        SharedPreferences.Editor editor1=sp.edit();
+        Log.d("CourseActivity",termData);
+        editor1.putString(MySupport.CHOOSE_TERM_STATUS,termData);
+        editor1.apply();
     }
     private void setReminder(boolean b) {
-            Calendar mCalendar;
-            //得到日历实例，主要是为了下面的获取时间
-            mCalendar = Calendar.getInstance();
-            mCalendar.setTimeInMillis(System.currentTimeMillis());
-            //获取当前毫秒值
-            long systemTime = System.currentTimeMillis();
+        Calendar mCalendar;
+        //得到日历实例，主要是为了下面的获取时间
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        //获取当前毫秒值
+        long systemTime = System.currentTimeMillis();
 
-            //是设置日历的时间，主要是让日历的年月日和当前同步
-            mCalendar.setTimeInMillis(System.currentTimeMillis());
-            // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
-            mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-            //设置在几点提醒  设置的为7点
-            mCalendar.set(Calendar.HOUR_OF_DAY, tuisong_hour);
-            //设置在几分提醒  设置的为00分
-            mCalendar.set(Calendar.MINUTE, tuisong_minute);
-            //下面这两个看字面意思也知道
-            mCalendar.set(Calendar.SECOND, 0);
-            mCalendar.set(Calendar.MILLISECOND, 0);
-            //上面设置的就是7点0分的时间点
-            //获取上面设置的7点0分的毫秒值
-            long selectTime = mCalendar.getTimeInMillis();
+        //是设置日历的时间，主要是让日历的年月日和当前同步
+        mCalendar.setTimeInMillis(System.currentTimeMillis());
+        // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
+        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        //设置在几点提醒  设置的为7点
+        mCalendar.set(Calendar.HOUR_OF_DAY, tuisong_hour);
+        //设置在几分提醒  设置的为00分
+        mCalendar.set(Calendar.MINUTE, tuisong_minute);
+        //下面这两个看字面意思也知道
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.MILLISECOND, 0);
+        //上面设置的就是7点0分的时间点
+        //获取上面设置的7点0分的毫秒值
+        long selectTime = mCalendar.getTimeInMillis();
 
-            // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
-            if(systemTime > selectTime) {
-                mCalendar.add(Calendar.DAY_OF_MONTH, 1);
-            }
-            AlarmManager am= (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
-            // 创建将执行广播的PendingIntent
-            PendingIntent pi= PendingIntent.getBroadcast(getActivity(), 0, new Intent(getActivity(), AlarmReceiver.class), 0);
-            if(b){
-                //am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pi);
-                am.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), (1000 * 60 * 60 * 24), pi);
-            }
-            else{
-                // cancel current alarm
-                am.cancel(pi);
-            }
+        // 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
+        if(systemTime > selectTime) {
+            mCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        AlarmManager am= (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        // 创建将执行广播的PendingIntent
+        PendingIntent pi= PendingIntent.getBroadcast(getActivity(), 0, new Intent(getActivity(), AlarmReceiver.class), 0);
+        if(b){
+            //am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pi);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), (1000 * 60 * 60 * 24), pi);
+        }
+        else{
+            // cancel current alarm
+            am.cancel(pi);
+        }
     }
     @Override
     public void onDestroy() {
@@ -307,8 +331,10 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                 SharedPreferences sp=getActivity().getSharedPreferences(LOCAL_COURSE,MODE_PRIVATE);
                 SharedPreferences.Editor editor=sp.edit();
                 editor.putBoolean(MySupport.LOCAL_COURSE_DATABASE,true);
+                editor.putString(MySupport.CHOOSE_TERM_STATUS,mySubjects.get(0).getTerm());
                 editor.apply();
                 initTimetableView();//初始化课程表
+
             }
             else{
                 Toast.makeText(getActivity(),scanResult.getErrMsg(),Toast.LENGTH_SHORT).show();
@@ -531,7 +557,7 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
         intent.setData(Uri.parse(UpdateURL)); //为Intent设置DATA属性
         startActivity(intent);
     }
-    public List<MySubject> changeLesson(List<SuperLesson> lessons)
+    public static List<MySubject> changeLesson(List<SuperLesson> lessons)
     {
         List<MySubject> mySubjects=new ArrayList<>();
         if(lessons==null)
@@ -554,7 +580,8 @@ public class Fragment1Activity extends Fragment implements View.OnClickListener 
                 {
                     integers.add(Integer.valueOf(arr[i]));
                 }
-                mySubjects.add(new MySubject("大二下学期",name,room,teacher,integers,start,step,day,2,""));
+
+                mySubjects.add(new MySubject(superLesson.getSemester(),name,room,teacher,integers,start,step,day,2,""));
             }
         }
 

@@ -21,7 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PhotoTestActivity"/>
+        <activity android:name=".Tools.TermsManageActivity" />
+        <activity
+            android:name=".Ui.LoopViewActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity android:name=".PhotoTestActivity" />
         <activity android:name=".Tools.UsersEditActivity" />
         <activity android:name=".Tools.SettingActivity" />
         <activity
@@ -39,9 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="cn.bmob.v3.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".Tools.ViewCourseActivity"
             android:theme="@android:style/Theme.Holo.Dialog" />

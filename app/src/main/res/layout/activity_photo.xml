@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/tv_photo_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/back"
+        app:sLeftIconHeight="32dp"
+        app:sLeftIconWidth="30dp"
+        app:sCenterTextString="拍照界面"
+        app:sCenterTextSize="18sp"
+        app:sUseRipple="false"
+        android:background="#ffffff" />
+    <ImageView
+        android:id="@+id/photo_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_photo_bar"
-            android:text="拍照界面"
-            android:drawableLeft="@drawable/icon_left"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/photo_show"
-        android:layout_width="match_parent"
-        android:layout_height="600dp" />
-    <Button
-        android:id="@+id/btn_photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="文字识别"
-        android:textSize="20sp"/>
+        <com.allen.library.SuperButton
+            android:id="@+id/btn_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="文字识别"
+            android:layout_marginLeft="10dp"
+            app:sCornersRadius="3dp"
+            app:sSolidColor="#1296db"
+            android:textColor="@color/app_black" />
+
+    </LinearLayout>
 
 </LinearLayout>

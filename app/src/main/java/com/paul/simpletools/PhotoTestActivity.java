@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allen.library.SuperTextView;
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
@@ -48,7 +49,7 @@ import java.util.Date;
 
 public class PhotoTestActivity extends AppCompatActivity {
     private Button button;
-    private TextView textView;
+    private SuperTextView textView;
     private static final String TAG = "PhotoTestActivity";
 
     private String mImagePath;                   //用于存储最终目录，即根目录 / 要操作（存储文件）的文件夹
@@ -71,6 +72,7 @@ public class PhotoTestActivity extends AppCompatActivity {
         initOCR();
         imageView=findViewById(R.id.photo_show);
         button=findViewById(R.id.btn_photo);
+
         textView=findViewById(R.id.tv_photo_bar);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

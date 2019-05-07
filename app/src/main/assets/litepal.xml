@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="MySubjects"/>
-    <version value="1"/>
+    <version value="2"/>
     <list>
         <mapping class="com.paul.simpletools.dataBase.MySubject"/>
     </list>
     <list>
         <mapping class="com.paul.simpletools.dataBase.EveryDayBean"/>
+    </list>
+    <list>
+        <mapping class="com.paul.simpletools.dataBase.TermData"/>
     </list>
 </litepal>

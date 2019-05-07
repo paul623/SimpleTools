@@ -1,6 +1,5 @@
 package com.paul.simpletools.Tools;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Notification;
@@ -9,17 +8,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -31,17 +24,19 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.paul.simpletools.Fragment.CourseActivity;
 import com.paul.simpletools.Fragment.MainFragmentActivity;
 import com.paul.simpletools.NonActivity;
 import com.paul.simpletools.R;
+import com.paul.simpletools.Ui.LoopViewActivity;
+import com.paul.simpletools.Ui.MySuperDialog;
+import com.paul.simpletools.classbox.activity.AuthActivity;
+import com.paul.simpletools.classbox.model.SuperResult;
+import com.paul.simpletools.classbox.utils.SuperUtils;
 import com.paul.simpletools.dataBase.MessageEvent;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
@@ -52,27 +47,32 @@ import org.litepal.LitePal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class SettingActivity extends AppCompatActivity {
 
-    SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7,stv_8,stv_9;
+    SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7,stv_8,stv_9,stv_10,stv_11,stv_12,stv_13;
     Boolean stv1,stv2,stv3,stv4,stv6;
     SharedPreferences sp;
     MessageEvent messageEvent;
     private int hour,minute;
+    private String DATE_OF_TERM_START;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         messageEvent=new MessageEvent();
         InitEventBus();
-        initSuperTextView();
+        LitePal.initialize(this);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        sharedPreferences=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
+        DATE_OF_TERM_START=sharedPreferences.getString(MySupport.DATE_LOCALDATE,"2019-02-18");
+        initSuperTextView();
     }
     @Override
     protected void onStop()
@@ -91,6 +91,11 @@ public class SettingActivity extends AppCompatActivity {
         stv_7=findViewById(R.id.stv_7);//推送时间设置
         stv_8=findViewById(R.id.stv_8);//推送设置
         stv_9=findViewById(R.id.stv_9);//每日一句设置
+        stv_10=findViewById(R.id.stv_10);//学期设置
+        stv_11=findViewById(R.id.stv_11);//开学日期设置
+        stv_12=findViewById(R.id.stv_12);//课程时间设置
+        stv_13=findViewById(R.id.stv_13);//学期管理
+        stv_11.setRightBottomString(DATE_OF_TERM_START);
         sp=this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
         hour=sp.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
         minute=sp.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
@@ -189,6 +194,48 @@ public class SettingActivity extends AppCompatActivity {
                 setStatus();
             }
         });
+        stv_10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               Intent intent=new Intent(SettingActivity.this, LoopViewActivity.class);
+               startActivityForResult(intent,2);
+            }
+        });
+        stv_11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar calendar=Calendar.getInstance();
+                new DatePickerDialog(SettingActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                month++;//有毒！
+                                DATE_OF_TERM_START=year+"-"+month+"-"+dayOfMonth;
+                                SharedPreferences.Editor editor1=sharedPreferences.edit();
+                                editor1.putString(MySupport.DATE_LOCALDATE,DATE_OF_TERM_START);
+                                editor1.apply();
+                                stv_11.setRightBottomString(DATE_OF_TERM_START);
+                                Toast.makeText(SettingActivity.this,"设置成功，重启生效！",Toast.LENGTH_SHORT).show();
+
+                            }
+                        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+        stv_12.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //课程时间设置
+                Toast.makeText(SettingActivity.this,"努力开发中~",Toast.LENGTH_SHORT).show();
+            }
+        });
+        stv_13.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this,TermsManageActivity.class));
+            }
+        });
         stv_1.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
         stv_2.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         stv_3.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_MAXNUMBERS,false));
@@ -205,43 +252,58 @@ public class SettingActivity extends AppCompatActivity {
         messageEvent.setShow_times(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false));
         messageEvent.setShow_weekend(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         messageEvent.setShow_nweek_lesson(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
-
+        messageEvent.setMySubjects(null);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
         ContentResolver resolver = getContentResolver();
-        try {
-            if(data!=null) {
-                Uri originalUri = data.getData(); // 获得图片的uri
-                MediaStore.Images.Media.getBitmap(resolver, originalUri);
-                String[] proj = {MediaStore.Images.Media.DATA};
-                @SuppressWarnings("deprecation")
-                Cursor cursor = managedQuery(originalUri, proj, null, null,
-                        null);
-                int column_index = cursor
-                        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(column_index);
-                messageEvent.setBackground(path);
-                SharedPreferences sp = getSharedPreferences(MySupport.LOCAL_COURSE, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString(MySupport.CONFIG_BG, path);
-                editor.apply();
-            }
-            else
-            {
-                Toast.makeText(SettingActivity.this,"操作错误或已取消",Toast.LENGTH_SHORT).show();
-            }
+        switch (requestCode){
+            case 1:
+                try {
+                    if (data != null) {
+                        Uri originalUri = data.getData(); // 获得图片的uri
+                        MediaStore.Images.Media.getBitmap(resolver, originalUri);
+                        String[] proj = {MediaStore.Images.Media.DATA};
+                        @SuppressWarnings("deprecation")
+                        Cursor cursor = managedQuery(originalUri, proj, null, null,
+                                null);
+                        int column_index = cursor
+                                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        cursor.moveToFirst();
+                        String path = cursor.getString(column_index);
+                        messageEvent.setBackground(path);
+                        SharedPreferences sp = getSharedPreferences(MySupport.LOCAL_COURSE, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString(MySupport.CONFIG_BG, path);
+                        editor.apply();
+                    } else {
+                        Toast.makeText(SettingActivity.this, "操作错误或已取消", Toast.LENGTH_SHORT).show();
+                    }
 
-        } catch (IOException e) {
-            Log.e("TAG-->Error", e.toString());
+                } catch (IOException e) {
+                    Log.e("TAG-->Error", e.toString());
+                }
+
+            break;
+                case 2:
+                if(data!=null)
+                {
+                    String termName=data.getStringExtra(MySupport.CHOOSE_TERM_STATUS);
+                    List<MySubject> mySubjects=LitePal.where("term=?",termName).find(MySubject.class);
+                    messageEvent.setMySubjects(mySubjects);
+                    SharedPreferences sharedPreferences=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putString(MySupport.CHOOSE_TERM_STATUS,termName);
+                    editor.apply();
+                }
+                break;
         }
+
         super.onActivityResult(requestCode, resultCode, data);
-        }
+    }
 
     private String INTime(Integer hour,Integer minute)
     {
@@ -343,8 +405,6 @@ public class SettingActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
-
 
 }
 

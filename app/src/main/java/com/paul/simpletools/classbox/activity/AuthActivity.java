@@ -23,13 +23,17 @@ import android.widget.Toast;
 
 import com.paul.simpletools.R;
 import com.paul.simpletools.classbox.SuperBoxRequest;
+import com.paul.simpletools.classbox.model.SuperLesson;
 import com.paul.simpletools.classbox.model.SuperResult;
 import com.paul.simpletools.classbox.model.SuperTerm;
 import com.paul.simpletools.classbox.utils.SuperUtils;
 import com.paul.simpletools.classbox.api.SuperEncrypt;
 import com.paul.simpletools.classbox.model.SuperProfile;
 import com.paul.simpletools.classbox.utils.SuperParser;
+import com.paul.simpletools.dataBase.TermData;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -112,7 +116,8 @@ public class AuthActivity extends AppCompatActivity {
     private ListView chooseTermListView;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> list;
-
+    private int term_id=100;
+    private String termName="@";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,6 +227,8 @@ public class AuthActivity extends AppCompatActivity {
                     if(terms!=null){
                         SuperTerm superTerm=terms.get(position);
                         if(superTerm!=null){
+                            term_id=position;
+                            Log.d("获取点击位置",term_id+"");
                             getCourseForSuper(superTerm.getBeginYear()+"",superTerm.getTerm()+"");
                         }
                     }
@@ -322,10 +329,11 @@ public class AuthActivity extends AppCompatActivity {
                     if(term.getTerm()==1) t="秋季学期（上学期）";
                     if(term.getTerm()==2) t="春季学期（下学期）";
 
-                    data.add(term.getBeginYear()+"  "+t);
+                    data.add(term.getBeginYear()+""+t);
                 }
             }
             list.addAll(data);
+
             arrayAdapter.notifyDataSetChanged();
             if(terms.size()==0){
                 Toast.makeText(this,"该用户未创建学期",Toast.LENGTH_SHORT).show();
@@ -335,7 +343,7 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    public void getCourseForSuper(String beginYear,String term) {
+    public void getCourseForSuper(String beginYear, final String term) {
         showDialog();
         SuperBoxRequest.getCourseForSuper(this, beginYear,
                 term, new Callback<ResponseBody>() {
@@ -348,7 +356,39 @@ public class AuthActivity extends AppCompatActivity {
                             SuperResult superResult = SuperParser.parseLessonResult(result);
                             superResult.setProfile(profile);
                             hideDialog();
+                            //superresult
+                            if(term_id>=0&&term_id<list.size())
+                                termName=list.get(term_id);
+                            Log.d("获取点击位置","字符串："+termName);
+                            LitePal.initialize(AuthActivity.this);
+                            if(!termName.equals("@")) {
+                                for (SuperLesson item : superResult.getLessons()) {
+                                    item.setSemester(termName);
+                                }
 
+                                TermData termData=new TermData();
+                                termData.setTermName(termName);
+                                List<TermData> termDatas=LitePal.where("termName=?",termName).find(TermData.class);
+                                Log.d("Auth",termDatas.size()+"");
+                                if(termDatas.size()!=0)
+                                {
+                                     for(TermData item:termDatas)
+                                     {
+                                         item.delete();
+                                     }
+                                     Toast.makeText(AuthActivity.this,"重复添加！已覆盖原表！",Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                                termData.save();
+
+                            }
+                            else
+                            {
+                                TermData termData=new TermData();
+                                termData.setTermName("默认"+superResult.getLessons().get(0).getSemester());
+                                termData.save();
+
+                            }
                             Intent intent = new Intent();
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(RESULT_OBJ, (Serializable) superResult);

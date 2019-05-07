@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="#ffffff"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+        <com.weigan.loopview.LoopView
+            android:id="@+id/loopview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <com.allen.library.SuperButton
+            android:id="@+id/loopview_postive"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="确定"
+            app:sSolidColor="#ffffff"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="#555555"
+            android:paddingBottom="8dp"
+            app:sUseSelector="true"
+            app:sSelectorNormalColor="#FF69B4"
+            app:sSelectorPressedColor="#FF1493"
+            android:layout_marginRight="10dp"/>
+
+        <com.allen.library.SuperButton
+            android:id="@+id/loopview_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="取消"
+            app:sSolidColor="#ffffff"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="#555555"
+            android:paddingBottom="8dp"
+            app:sUseSelector="true"
+            app:sSelectorNormalColor="#FF69B4"
+            app:sSelectorPressedColor="#FF1493"/>
+
+    </LinearLayout>
+
+</LinearLayout>
