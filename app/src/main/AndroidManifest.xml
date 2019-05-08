@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.paul.simpletools">
+
     <!-- 允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取wifi网络状态的信息 -->
@@ -21,6 +22,23 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".CourseListWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="WIDGET_UPDATE" />
+                <action android:name="WIDGET_UPDATE_NO_COURSES" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/course_list_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".Ui.KeepAliveService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".Ui.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <activity android:name=".Tools.TermsManageActivity" />
         <activity
             android:name=".Ui.LoopViewActivity"

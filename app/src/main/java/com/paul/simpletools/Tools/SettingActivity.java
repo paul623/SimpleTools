@@ -332,7 +332,8 @@ public class SettingActivity extends AppCompatActivity {
         int value_curWeek=sharedPreferences.getInt(MySupport.LOCAL_CURWEEK,1);
         int curday=toolsHelper.getTodayWeek();
         List<MySubject> subjects=new ArrayList<>();
-        subjects.addAll(NonActivity.getHaveSubjectsWithDay(LitePal.findAll(MySubject.class),value_curWeek,curday));
+        String term=sharedPreferences.getString(MySupport.CHOOSE_TERM_STATUS,"");
+        subjects.addAll(NonActivity.getHaveSubjectsWithDay(LitePal.where("term=?",term).find(MySubject.class),value_curWeek,curday));
         //Toast.makeText(context, "闹铃响了, 可以做点事情了~~", Toast.LENGTH_LONG).show();
 
         NotificationManager manager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);

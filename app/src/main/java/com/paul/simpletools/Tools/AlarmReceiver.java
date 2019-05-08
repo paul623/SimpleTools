@@ -41,7 +41,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         int value_curWeek=sharedPreferences.getInt(MySupport.LOCAL_CURWEEK,1);
         int curday=toolsHelper.getTodayWeek();
         List<MySubject> subjects=new ArrayList<>();
-        subjects.addAll(NonActivity.getHaveSubjectsWithDay(LitePal.findAll(MySubject.class),value_curWeek,curday));
+        String term=sharedPreferences.getString(MySupport.CHOOSE_TERM_STATUS,"");
+        subjects.addAll(NonActivity.getHaveSubjectsWithDay(LitePal.where("term=?",term).find(MySubject.class),value_curWeek,curday));
         manager = (NotificationManager)context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         //例如这个id就是你传过来的
         String id="simpletools";
