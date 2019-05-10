@@ -50,6 +50,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
+import es.dmoral.toasty.Toasty;
+
 public class SettingActivity extends AppCompatActivity {
 
     SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7,stv_8,stv_9,stv_10,stv_11,stv_12,stv_13;
@@ -159,7 +161,7 @@ public class SettingActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         hour=i;
                         minute=i1;
-                        Toast.makeText(SettingActivity.this,"推送时间已经设置为 "+hour+":"+minute,Toast.LENGTH_SHORT).show();
+                        Toasty.success(SettingActivity.this,"推送时间已经设置为 "+hour+":"+minute,Toast.LENGTH_SHORT).show();
                         sp=SettingActivity.this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
                         SharedPreferences.Editor editor1=sp.edit();
                         editor.putInt(MySupport.CONFIG_TUUISONG_HOUR,hour);
@@ -168,7 +170,7 @@ public class SettingActivity extends AppCompatActivity {
                         messageEvent.setHour(hour);
                         messageEvent.setMinute(minute);
                         String result=INTime(hour,minute);
-                        stv_7.setRightBottomString(result);
+                        stv_7.setRightString(result);
                     }
                 },hour,minute,true).show();//记得使用show才能显示！
             }
@@ -216,8 +218,8 @@ public class SettingActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor1=sharedPreferences.edit();
                                 editor1.putString(MySupport.DATE_LOCALDATE,DATE_OF_TERM_START);
                                 editor1.apply();
-                                stv_11.setRightBottomString(DATE_OF_TERM_START);
-                                Toast.makeText(SettingActivity.this,"设置成功，重启生效！",Toast.LENGTH_SHORT).show();
+                                stv_11.setRightString(DATE_OF_TERM_START);
+                                Toasty.success(SettingActivity.this,"设置成功，重启生效！",Toast.LENGTH_SHORT).show();
 
                             }
                         },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -227,7 +229,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //课程时间设置
-                Toast.makeText(SettingActivity.this,"努力开发中~",Toast.LENGTH_SHORT).show();
+                Toasty.info(SettingActivity.this,"努力开发中~",Toast.LENGTH_SHORT).show();
             }
         });
         stv_13.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +282,7 @@ public class SettingActivity extends AppCompatActivity {
                         editor.putString(MySupport.CONFIG_BG, path);
                         editor.apply();
                     } else {
-                        Toast.makeText(SettingActivity.this, "操作错误或已取消", Toast.LENGTH_SHORT).show();
+                        Toasty.error(SettingActivity.this, "操作错误或已取消", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (IOException e) {

@@ -11,7 +11,23 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    <style name="MySuperTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- AppCompatEditText默认状态状态设置底线颜色 -->
+        <item name="colorControlNormal">#DBDBDB</item>
+        <!-- AppCompatEditText选择的底线颜色 -->
+        <item name="colorControlActivated">#DBDBDB</item>
+    </style>
+    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <!-- 这里设置背景为透明，为了隐藏边框 -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- 这里是修改顶部标题背景颜色，具体颜色自己定，可以是图片 -->
+        <item name="android:topDark">@color/white</item>
+        <!-- 这里是修改内容区域背景颜色 -->
+        <item name="android:centerDark">@color/white</item>
+        <item name="android:windowAnimationStyle">@android:color/transparent</item>
     </style>
 
 </resources>

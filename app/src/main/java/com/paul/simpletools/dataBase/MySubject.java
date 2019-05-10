@@ -4,6 +4,7 @@ import com.zhuangfei.timetable.model.ScheduleEnable;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/3/27 21：46
@@ -61,9 +62,7 @@ public class MySubject extends LitePalSupport implements ScheduleEnable{
      */
     private int colorRandom = 0;
 
-    public MySubject() {
-        // TODO Auto-generated constructor stub
-    }
+
 
     public void setTime(String time) {
         this.time = time;
@@ -81,19 +80,6 @@ public class MySubject extends LitePalSupport implements ScheduleEnable{
         return term;
     }
 
-    public MySubject(String term, String name, String room, String teacher, List<Integer> weekList, int start, int step, int day, int colorRandom, String time) {
-        super();
-        this.term=term;
-        this.name = name;
-        this.room = room;
-        this.teacher = teacher;
-        this.weekList=weekList;
-        this.start = start;
-        this.step = step;
-        this.day = day;
-        this.colorRandom = colorRandom;
-        this.time=time;
-    }
 
     public String getName() {
         return name;
@@ -181,4 +167,35 @@ public class MySubject extends LitePalSupport implements ScheduleEnable{
     public int getId() {
         return id;
     }
+
+    public MySubject( String name, String room, String teacher, List<Integer> weekList, int start, int step, int day, String term) {
+        this.id = 0;
+        this.name = name;
+        this.time = "";
+        this.room = room;
+        this.teacher = teacher;
+        this.weekList = weekList;
+        this.start = start;
+        this.step = step;
+        this.day = day;
+        this.term = term;
+        this.colorRandom = 0;
+    }
+    public MySubject() {
+        this.id = 0;
+        this.name = "";
+        this.time = "";
+        this.room = "";
+        this.teacher = "";
+        List<Integer> list=new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        this.weekList =list ;
+        this.start = 1;
+        this.step = 1;
+        this.day = 1;
+        this.term = "@@";
+        this.colorRandom = 0;
+    }
+
 }

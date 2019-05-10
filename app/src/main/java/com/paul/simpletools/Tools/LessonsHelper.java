@@ -1,6 +1,7 @@
 package com.paul.simpletools.Tools;
 
 import com.paul.simpletools.dataBase.MySubject;
+import com.zhuangfei.timetable.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,23 @@ import java.util.List;
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
 public class LessonsHelper {
+    public static List<Schedule> changeToShedule(List<MySubject> mySubjects)
+    {
+        List<Schedule> schedules=new ArrayList<>();
+        for(MySubject item:mySubjects)
+        {
+            Schedule schedule=new Schedule();
+            schedule.setName(item.getName());
+            schedule.setDay(item.getDay());
+            schedule.setRoom(item.getRoom());
+            schedule.setStart(item.getStart());
+            schedule.setStep(item.getStep());
+            schedule.setTeacher(item.getTeacher());
+            schedule.setWeekList(item.getWeekList());
+            schedules.addAll(schedules);
+        }
+        return schedules;
+    }
     public static List<MySubject> getHaveSubjectsWithDay(List<MySubject> scheduleList, int curWeek, int day) {
         List<MySubject> subjectBeanList = getAllSubjectsWithDay(scheduleList, day);
         List<MySubject> result = new ArrayList<>();

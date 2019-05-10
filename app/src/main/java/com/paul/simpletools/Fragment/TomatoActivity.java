@@ -3,6 +3,8 @@ package com.paul.simpletools.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -62,7 +66,16 @@ public class TomatoActivity extends Fragment implements View.OnClickListener {
         sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE,Context.MODE_PRIVATE);
         x=sp.getInt(MySupport.LOCAL_TOMATO,0);
         indexView(); //跳转到indexView()
-
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
+        {
+            Window window = getActivity().getWindow();
+            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //设置状态栏颜色
+            window.setStatusBarColor(Color.parseColor("#ED5046"));
+        }
     }
     /**
      *初始化方法

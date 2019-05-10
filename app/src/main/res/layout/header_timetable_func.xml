@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF">
 
+    <com.allen.library.SuperTextView
+        android:id="@+id/course_head_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        app:sLeftIconRes="@drawable/icon_header"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
+        app:sUseShape="true"
+        app:sLeftIconShowCircle="true"
+        app:sLeftIconMarginLeft="20dp"/>
     <ImageButton
         android:id="@+id/btn_photo"
         android:layout_width="35dp"

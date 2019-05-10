@@ -36,7 +36,8 @@
             app:sUseSelector="true"
             app:sSelectorNormalColor="#FF69B4"
             app:sSelectorPressedColor="#FF1493"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            app:sCornersRadius="3dp"/>
 
         <com.allen.library.SuperButton
             android:id="@+id/loopview_negative"
@@ -50,7 +51,8 @@
             android:paddingBottom="8dp"
             app:sUseSelector="true"
             app:sSelectorNormalColor="#FF69B4"
-            app:sSelectorPressedColor="#FF1493"/>
+            app:sSelectorPressedColor="#FF1493"
+            app:sCornersRadius="3dp"/>
 
     </LinearLayout>
 

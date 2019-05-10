@@ -1,39 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <com.allen.library.SuperTextView
+        android:id="@+id/st_head"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:sLeftTextString="取消"
+        app:sRightTextString="保存"
         app:sLeftTextSize="18sp"
         app:sLeftTextColor="#87CEFA"
+        app:sRightTextSize="18sp"
+        app:sRightTextColor="#87CEFA"
         app:sCenterTextString="修改课程"
         app:sCenterTextSize="20sp"
         app:sUseRipple="false"
         android:background="#ffffff"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="#ffffff"
-        android:orientation="vertical">
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_1"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="15dp"/>
         <EditText
-            android:id="@+id/et_1"
+            android:id="@+id/et_lesson_name"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:paddingLeft="20dp"
-            android:drawablePadding="10dp"
-            android:textCursorDrawable="@drawable/cursor_color" />
+            android:layout_height="55dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_2"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="15dp"/>
         <EditText
-            android:id="@+id/et_2"
+            android:id="@+id/et_lesson_teacher"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:paddingLeft="20dp"
-            android:drawablePadding="10dp"
-            android:textCursorDrawable="@drawable/cursor_color"
-            />
+            android:layout_height="55dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,70 +63,54 @@
             android:layout_height="30dp"
             android:paddingLeft="10dp"
             app:sLeftTextString="时间段"
-            app:sRightIconRes="@drawable/icon_quxiao"
             app:sRightIconHeight="20dp"
             app:sRightIconWidth="20dp"
             android:paddingRight="10dp"
             app:sDividerLineColor="#ffffff"
             app:sUseRipple="false"/>
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_weekselect"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            app:sLeftIconRes="@drawable/icon_time"
+            app:sLeftIconHeight="25dp"
+            app:sLeftIconWidth="25dp"
+            android:paddingLeft="7dp"
+            app:sLeftTextString="周次选择"
+            app:sDividerLineColor="#DBDBDB"
+            app:sBottomDividerLineMarginLeft="45dp"/>
+
+
+        <com.allen.library.SuperTextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/stv_lessonselect"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            app:sLeftIconRes="@drawable/icon_time2"
+            app:sLeftIconHeight="25dp"
+            app:sLeftIconWidth="25dp"
+            android:paddingLeft="7dp"
+            app:sLeftTextString="上课节次"
+            app:sDividerLineColor="#DBDBDB"
+            app:sBottomDividerLineMarginLeft="45dp"/>
         <LinearLayout
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/icon_time"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp" />
-            <EditText
-                android:id="@+id/et_course_date"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/icon_time2"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
-            <EditText
-                android:id="@+id/et_course_time"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="22dp"
+                android:layout_height="25dp"
                 android:background="@drawable/icon_position"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"/>
             <EditText
-                android:id="@+id/et_course_location"
+                android:id="@+id/et_lesson_location"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"/>
         </LinearLayout>
     </LinearLayout>
-    <Button
-        android:id="@+id/btn_course_confirm"
-        android:text="确认修改"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bmob_update_button_cancel_bg_normal"/>
 </LinearLayout>

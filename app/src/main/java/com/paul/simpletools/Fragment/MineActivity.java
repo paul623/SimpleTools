@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -50,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -121,7 +124,13 @@ public class MineActivity extends Fragment {
         handler = new Handler();
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
         {
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            Window window = getActivity().getWindow();
+            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //设置状态栏颜色
+            window.setStatusBarColor(Color.parseColor("#FFFFFF"));
         }
     }
 
@@ -129,7 +138,7 @@ public class MineActivity extends Fragment {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MySupport.conact_qq)));
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "请检查是否安装QQ！", Toast.LENGTH_SHORT).show();
+            Toasty.error(getActivity(), "请检查是否安装QQ！", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -149,7 +158,7 @@ public class MineActivity extends Fragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity(), "嘻嘻(#^.^#)", Toast.LENGTH_SHORT).show();
+                        Toasty.success(getActivity(), "嘻嘻(#^.^#)", Toast.LENGTH_SHORT).show();
                     }
                 });
         normalDialog.show();
@@ -254,7 +263,7 @@ public class MineActivity extends Fragment {
                     editor.putString(MySupport.CONFIG_HEAD, path);
                     editor.apply();
                 } else {
-                    Toast.makeText(getActivity(), "操作错误或已取消", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(getActivity(), "操作错误或已取消", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (IOException e) {
@@ -266,7 +275,7 @@ public class MineActivity extends Fragment {
             LoadInternet.sendRequestWithOkhttp(getRequestURL(status), new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Toast.makeText(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
+                    Toasty.error(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -305,7 +314,7 @@ public class MineActivity extends Fragment {
             LoadInternet.sendRequestWithOkhttp(getRequestURL(status), new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Toast.makeText(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
+                    Toasty.error(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -482,7 +491,8 @@ public class MineActivity extends Fragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(),"吓死我了···",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(),"吓死我了···",Toast.LENGTH_SHORT).show();
+                        Toasty.error(getContext(), "吓死我了···", Toast.LENGTH_SHORT, true).show();
                     }
                 });
         normalDialog.show();

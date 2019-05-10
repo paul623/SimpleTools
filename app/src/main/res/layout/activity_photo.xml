@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
 
             android:text="文字识别"
-            android:layout_marginLeft="10dp"
             app:sCornersRadius="3dp"
             app:sSolidColor="#1296db"
             android:textColor="@color/app_black" />

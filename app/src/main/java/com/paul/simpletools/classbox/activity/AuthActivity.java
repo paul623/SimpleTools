@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -376,7 +377,12 @@ public class AuthActivity extends AppCompatActivity {
                                      {
                                          item.delete();
                                      }
-                                     Toast.makeText(AuthActivity.this,"重复添加！已覆盖原表！",Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(RESULT_OBJ, (Serializable) superResult);
+                                    intent.putExtras(bundle);
+                                    AuthActivity.this.setResult(RESULT_STATUS, intent);
+                                     Toasty.error(AuthActivity.this,"重复添加！已覆盖原表！",Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                                 termData.save();
@@ -429,7 +435,7 @@ public class AuthActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(RESULT_OBJ, (Serializable) superResult);
                             intent.putExtras(bundle);
-                            AuthActivity.this.setResult(RESULT_STATUS, intent);
+                            AuthActivity.this.setResult(130, intent);
                             finish();
                         } catch (IOException e) {
                             hideDialog();

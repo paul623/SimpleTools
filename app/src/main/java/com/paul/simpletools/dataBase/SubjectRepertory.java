@@ -11,7 +11,7 @@ import java.util.List;
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
 public class SubjectRepertory {
-    public static List<MySubject> loadDefaultSubjects(){
+    /*public static List<MySubject> loadDefaultSubjects(){
         //json转义
         String json="[[\"2017-2018学年秋\", \"\", \"\", \"计算机组成原理\", \"\", \"\", \"\", \"\", \"刘静\", \"\", \"\", \"1周上\", 1, 1, 2, \"\", \"计算机综合楼106\", \"\"]," +
                 "[\"2017-2018学年秋\", \"\", \"\", \"hahaha\", \"\", \"\", \"\", \"\", \"刘静\", \"\", \"\", \"2周上\", 1, 1, 4, \"\", \"计算机综合楼106\", \"\"],"+
@@ -33,7 +33,7 @@ public class SubjectRepertory {
      * @param parseString
      * @return
      */
-    public static List<MySubject> parse(String parseString) {
+    /*public static List<MySubject> parse(String parseString) {
         List<MySubject> courses = new ArrayList<>();
         try {
             JSONArray array = new JSONArray(parseString);
@@ -99,5 +99,5 @@ public class SubjectRepertory {
         for(int i=first;i<=end;i++)
             weekList.add(i);
         return weekList;
-    }
+    }*/
 }

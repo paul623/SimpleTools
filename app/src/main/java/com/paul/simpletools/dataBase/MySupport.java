@@ -27,7 +27,7 @@ public class MySupport {
     public static String LOCAL_COURSE_DATABASE="local_course_data_base";
     public static String LOCAL_FRAGMENT2="local_fragment2";//本地存储，负责记录头像、每日一句等信息
     public static String appkey="5c2fcdf15f7879bd65b8d9a9e4d26c89";
-    public static String conact_qq="mqqwpa://im/chat?chat_type=wpa&uin=" + "1051786470";//跳转QQ
+    public static String conact_qq="mqqwpa://im/chat?chat_type=wpa&uin=" + "2499761614";//跳转QQ
     public static String CONFIG_BG="config_background";
     public static String CONFIG_HEAD="config_head";
     public static int  REQUEST_IMAGE_CAPTURE = 1;
@@ -51,4 +51,5 @@ public class MySupport {
     public static final int VIDEO_RESULT_CODE = 102;        //标志符，视频的结果码，判断是哪一个Intent
     public static final String[] REQUEST_STATUS_SELECTORS = new String[]{"双语","随机","动漫","漫画","游戏","小说","原创","网络","其他"};
     public static final String CHOOSE_TERM_STATUS="choose_term_status";
+    public static final String[] DEFAULT_COURSE_STARTTIME = new String[]{"8:00", "8:55", "10:00", "10:55","14:00", "14:55", "16:00", "16:55","17:50", "18:35", "19:00", "20:00"};
 }

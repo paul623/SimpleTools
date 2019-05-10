@@ -1,12 +1,18 @@
 package com.paul.simpletools.Fragment;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.paul.simpletools.R;
 public class MainFragmentActivity extends FragmentActivity {
 
@@ -53,7 +59,9 @@ public class MainFragmentActivity extends FragmentActivity {
                     if(lastfragment!=0)
                     {
                         switchFragment(lastfragment,0);
+
                         lastfragment=0;
+
 
                     }
                     return true;
@@ -64,6 +72,16 @@ public class MainFragmentActivity extends FragmentActivity {
                     {
                         switchFragment(lastfragment,2);
                         lastfragment=2;
+                        /*if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
+                        {
+                            Window window =fragments[lastfragment].getActivity().getWindow();
+                            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            //设置状态栏颜色
+                            window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+                        }*/
                     }
                     return true;
                 }
@@ -73,6 +91,16 @@ public class MainFragmentActivity extends FragmentActivity {
                     {
                         switchFragment(lastfragment,1);
                         lastfragment=1;
+                        /*if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
+                        {
+                            Window window =fragments[lastfragment].getActivity().getWindow();
+                            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            //设置状态栏颜色
+                            window.setStatusBarColor(Color.parseColor("#ED5046"));
+                        }*/
                     }
                     return true;
                 }
@@ -85,13 +113,44 @@ public class MainFragmentActivity extends FragmentActivity {
     private void switchFragment(int lastfragment,int index)
     {
         FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+        /*transaction.setCustomAnimations(
+                R.animator.fragment_slide_right_enter,R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_left_enter,R.animator.fragment_slide_right_exit
+        );*/
         transaction.hide(fragments[lastfragment]);//隐藏上个Fragment
         if(fragments[index].isAdded()==false)
         {
             transaction.add(R.id.mainview,fragments[index]);
 
         }
-        transaction.show(fragments[index]).commitAllowingStateLoss();
+        //transaction.show(fragments[index]).commitAllowingStateLoss();
+        //transaction.addToBackStack(getClass().getName());
+        transaction.show(fragments[index]);
+        transaction.commitAllowingStateLoss();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
+        {
+            if (fragments[index].getActivity() != null) {
+                Log.d("透明状态栏","执行了");
+                Window window = fragments[index].getActivity().getWindow();
+                //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                //设置状态栏颜色
+
+                switch (index) {
+                    case 0:
+                        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+                        break;
+                    case 1:
+                        window.setStatusBarColor(Color.parseColor("#ED5046"));
+                        break;
+                    case 2:
+                        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+                        break;
+                }
+            }
+        }
 
     }
 

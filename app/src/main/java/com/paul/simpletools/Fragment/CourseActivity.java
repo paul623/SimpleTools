@@ -9,7 +9,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,15 +28,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allen.library.SuperTextView;
+import com.paul.simpletools.CourseListWidget;
 import com.paul.simpletools.PhotoTestActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.AlarmReceiver;
+import com.paul.simpletools.Tools.EditCourseActivity;
 import com.paul.simpletools.Tools.LessonsHelper;
 import com.paul.simpletools.Tools.ViewCourseActivity;
 import com.paul.simpletools.Tools.toolsHelper;
@@ -64,6 +72,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import cn.bmob.v3.update.BmobUpdateAgent;
+import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -79,10 +88,12 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
     private ImageButton takephotoButton;
     private LinearLayout layout;
     private TextView titleTextView;
-    private List<MySubject> mySubjects;
+    private List<MySubject> mySubjects=new ArrayList<>();
     private LinearLayout linearLayout;
     private Boolean cantuisong;
     private Integer tuisong_hour,tuisong_minute;
+    private List<Schedule> clickSchedule=new ArrayList<>();//记录点击的shedule
+    private SuperTextView headicon;
     //记录切换的周次，不一定是当前周
     public int target = -1;
     String termData="";
@@ -108,12 +119,8 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         }
         if(messageEvent.getShow_times())
         {
-            String[] times = new String[]{
-                    "8:00", "8:55", "10:00", "10:55",
-                    "14:00", "14:55", "16:00", "16:55",
-                    "17:50", "18:35", "19:00", "20:00"};
             OnSlideBuildAdapter listener = (OnSlideBuildAdapter) mTimetableView.onSlideBuildListener();
-            listener.setTimes(times)
+            listener.setTimes(MySupport.DEFAULT_COURSE_STARTTIME)
                     .setTimeTextColor(Color.BLACK);
         }
         else
@@ -145,6 +152,14 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         linearLayout=getView().findViewById(R.id.ly_classtable);
         super.onActivityCreated(savedInstanceState);
         LitePal.initialize(getContext());//初始化dataBase
+        headicon=getView().findViewById(R.id.course_head_icon);
+        headicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toasty.info(getContext(),"别戳我~",Toast.LENGTH_SHORT).show();
+            }
+        });
+        setHeadIcon();//同步头像
         takephotoButton=getView().findViewById(R.id.btn_photo);
         takephotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +220,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
             {
                 mySubjects=LitePal.where("term=?",termData).find(MySubject.class);
                 Log.d("CourseActivity","正在匹配！！！！");
+                Log.d("CourseActivity",mySubjects.size()+"个");
             }
            else
             {
@@ -217,7 +233,13 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         }
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)//透明状态栏
         {
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            Window window = getActivity().getWindow();
+            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //设置状态栏颜色
+            window.setStatusBarColor(Color.parseColor("#FFFFFF"));
         }
         EventBus.getDefault().register(this);//EventBus注册
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
@@ -312,6 +334,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
+        Log.d("CourseActivity",requestCode+"");
         if(requestCode==REQUEST_IMPORT&&resultCode==AuthActivity.RESULT_STATUS)
         {
             SuperResult scanResult= SuperUtils.getResult(data);
@@ -336,8 +359,69 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                 initTimetableView();//初始化课程表
 
             }
+
             else{
-                Toast.makeText(getActivity(),scanResult.getErrMsg(),Toast.LENGTH_SHORT).show();
+                Toasty.error(getActivity(),scanResult.getErrMsg(),Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(requestCode==22&&data!=null)
+        {
+            Log.d("CourseActivity","执行了初始化操作");
+            Log.d("CourseActivity",data.getExtras().getBoolean("resultView")+"");
+            Log.d("CourseActivity",data.getExtras().getBoolean("resultEdit")+"");
+            int loc,index;
+            if (temp_curWeek % 2 == 0&&clickSchedule.size()>1) {
+                index = 1;
+            }
+            else
+            {
+                index = 0;
+            }
+            if(data.getExtras().getBoolean("resultView"))
+            {
+
+                Log.d("CourActivity","已经刷新了布局");
+                //List<MySubject> re=LitePal.where("term=?",termData).find(MySubject.class);
+
+                loc=mTimetableView.dataSource().indexOf(clickSchedule.get(index));
+                if(loc==-1)
+                {
+                    Toasty.error(getContext(),"Oooops！出错了,请重启本应用",Toast.LENGTH_SHORT).show();
+                }
+                mTimetableView.dataSource().remove(loc);
+                mTimetableView.updateView();
+            }
+            else if(data.getExtras().getBoolean("resultEdit"))
+            {
+
+                int address=mTimetableView.dataSource().indexOf(clickSchedule.get(index));
+                Log.d("mTimetableView",index+"");
+                if(address==-1)
+                {
+                    /*List<MySubject> mm=LitePal.where("term=?",termData).find(MySubject.class);
+                    mTimetableView.dataSource().clear();
+                    mTimetableView.source(mm);*/
+                }
+                else
+                {
+                    List<MySubject> mm=LitePal.where("term=?",termData).find(MySubject.class);
+                    mTimetableView.dataSource().clear();
+                    mTimetableView.source(mm);
+                }
+               mTimetableView.updateView();
+            }
+        }
+        else if(requestCode==23&&data!=null)
+        {
+            Log.d("添加课程","执行了外层");
+            Log.d("添加课程","状态"+data.getExtras().getBoolean("result"));
+            if(data.getExtras().getBoolean("result"))
+            {
+                Log.d("添加课程","刷新");
+                List<MySubject> mm=LitePal.where("term=?",termData).find(MySubject.class);
+                mTimetableView.dataSource().clear();
+                mTimetableView.source(mm);
+                mTimetableView.updateView();
             }
         }
     }
@@ -385,20 +469,31 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                     @Override
                     public void onItemClick(View v, List<Schedule> scheduleList) {
                         //display(scheduleList);
+                        clickSchedule=scheduleList;
+                        Log.d("mTimetableView","监听到"+clickSchedule.get(0).getName());
                         Intent intent=new Intent(getActivity(), ViewCourseActivity.class);
                         intent.putExtra("date",temp_curWeek);
+                        intent.putExtra("term",termData);
                         Bundle bundle=new Bundle();
                         bundle.putSerializable("SuperLessons",(Serializable) scheduleList);
                         intent.putExtras(bundle);
-                        startActivity(intent);
+                        startActivityForResult(intent,22);
                     }
                 })
                 .callback(new ISchedule.OnItemLongClickListener() {
                     @Override
                     public void onLongClick(View v, int day, int start) {
-                        Toast.makeText(getActivity(),
+                        Toasty.info(getActivity(),
                                 "长按:周" + day  + ",第" + start + "节",
                                 Toast.LENGTH_SHORT).show();
+                        //startActivity(new Intent(getActivity(), EditCourseActivity.class));
+                        /*Intent intent=new Intent(getActivity(), ViewCourseActivity.class);
+                        intent.putExtra("day",day);
+                        intent.putExtra("start",start);
+                        Bundle bundle=new Bundle();
+                        bundle.putSerializable("SuperLessons",(Serializable) scheduleList);
+                        intent.putExtras(bundle);
+                        startActivity(intent);*/
                     }
                 })
                 .callback(new ISchedule.OnWeekChangedListener() {
@@ -413,17 +508,44 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                     @Override
                     public void onFlaglayoutClick(int day, int start) {
                         mTimetableView.hideFlaglayout();
-                        Toast.makeText(getActivity(),
+                        Toasty.info(getActivity(),
                                 "点击了旗标:周" + (day + 1) + ",第" + start + "节",
                                 Toast.LENGTH_SHORT).show();
-                        /*Intent intent=new Intent(MainActivity.this, EditCourseActivity.class);
-                        startActivity(intent);*/
+                        Intent intent=new Intent(getContext(), EditCourseActivity.class);
+                        //schedules = (List<Schedule>) getIntent().getSerializableExtra("SuperLessons");
+                        //date = getIntent().getIntExtra("课", 0);
+                        //term=getIntent().getStringExtra("学期");
+                        Schedule schedule=initSchedule(day+1,start);
+                        List<Schedule> scheduleList=new ArrayList<>();
+                        scheduleList.add(schedule);
+                        Bundle bundle=new Bundle();
+                        bundle.putSerializable("SuperLessons",(Serializable) scheduleList);
+                        intent.putExtras(bundle);
+                        intent.putExtra("课",0);
+                        intent.putExtra("学期",termData);
+                        startActivityForResult(intent,23);
                     }
                 })
                 .showView();
         getConfig();
     }
 
+    private Schedule initSchedule(int curDay,int start_lesson)
+    {
+        Schedule schedule=new Schedule();
+        schedule.setDay(curDay);
+        schedule.setRoom("");
+        schedule.setName("");
+        List<Integer> week=new ArrayList<>();
+        for(int i=1;i<=temp_curWeek;i++)
+        {
+            week.add(i);
+        }
+        schedule.setWeekList(week);
+        schedule.setStart(start_lesson);
+        schedule.setStep(2);
+        return schedule;
+    }
     /**
      * 更新一下，防止因程序在后台时间过长（超过一天）而导致的日期或高亮不准确问题。
      */
@@ -508,34 +630,8 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         }
     }
 
-    /**
-     * 删除课程
-     * 内部使用集合维护课程数据，操作集合的方法来操作它即可
-     * 最后更新一下视图（全局更新）
-     */
-    protected void deleteSubject() {
-        int size = mTimetableView.dataSource().size();
-        int pos = (int) (Math.random() * size);
-        if (size > 0) {
-            mTimetableView.dataSource().remove(pos);
-            mTimetableView.updateView();
-        }
-    }
 
-    /**
-     * 添加课程
-     * 内部使用集合维护课程数据，操作集合的方法来操作它即可
-     * 最后更新一下视图（全局更新）
-     */
-    protected void addSubject() {
-        List<Schedule> dataSource = mTimetableView.dataSource();
-        int size = dataSource.size();
-        if (size > 0) {
-            Schedule schedule = dataSource.get(0);
-            dataSource.add(schedule);
-            mTimetableView.updateView();
-        }
-    }
+
     /**
      * 设置月份宽度
      */
@@ -552,7 +648,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
 
     private void upDate()
     {
-        BmobUpdateAgent.update(getActivity());
+        //BmobUpdateAgent.update(getActivity());
         Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
         intent.setData(Uri.parse(UpdateURL)); //为Intent设置DATA属性
         startActivity(intent);
@@ -580,8 +676,9 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                 {
                     integers.add(Integer.valueOf(arr[i]));
                 }
+                //String name,  String room, String teacher, List<Integer> weekList, int start, int step, int day, String term
 
-                mySubjects.add(new MySubject(superLesson.getSemester(),name,room,teacher,integers,start,step,day,2,""));
+                mySubjects.add(new MySubject(name,room,teacher,integers,start,step,day,superLesson.getSemester()));
             }
         }
 
@@ -603,11 +700,6 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         String courseName="";
         int curday;
         Calendar calendar=Calendar.getInstance();
-        String[] times = new String[]{
-                "8:00", "8:55", "10:00", "10:55",
-                "14:00", "14:55", "16:00", "16:55",
-                "17:50", "18:35", "19:00", "20:00"
-        };
         SimpleDateFormat formatters = new SimpleDateFormat("HH:mm");
         Date curDates = new Date(System.currentTimeMillis());// 获取当前时间
         String strs = formatters.format(curDates);
@@ -631,12 +723,12 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         }
         Log.d("课表","curday:"+curday);
         int result=-1;
-        for(int i=0;i<times.length-1;i++)
+        for(int i=0;i<MySupport.DEFAULT_COURSE_STARTTIME.length-1;i++)
         {
             String [] stime=new String[]{};
             String [] etime=new String[]{};
-            stime=times[i].split(":");
-            etime=times[i+1].split(":");
+            stime=MySupport.DEFAULT_COURSE_STARTTIME[i].split(":");
+            etime=MySupport.DEFAULT_COURSE_STARTTIME[i+1].split(":");
             //开始时间
             int sth = Integer.parseInt(stime[0]);//小时
             int stm = Integer.parseInt(stime[1]);//分
@@ -673,5 +765,25 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         return courseName;
 
     }
+    /*public static Bitmap createCircleImage(Bitmap source) {
+        int length = source.getWidth() < source.getHeight() ? source.getWidth() : source.getHeight();
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(target);
+        canvas.drawCircle(length / 2, length / 2, length / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(source, 0, 0, paint);
+        return target;
+    }*/
+    private void setHeadIcon()
+    {
+        SharedPreferences sp = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
+        if (!sp.getString(MySupport.CONFIG_HEAD, " ").equals(" ")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(sp.getString(MySupport.CONFIG_HEAD, " "));
+            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+            headicon.setLeftIcon(drawable);
 
+        }
+    }
 }

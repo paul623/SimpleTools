@@ -64,7 +64,8 @@
         <activity
             android:name=".Tools.ViewCourseActivity"
             android:theme="@android:style/Theme.Holo.Dialog" />
-        <activity android:name=".Tools.EditCourseActivity" />
+        <activity android:name=".Tools.EditCourseActivity"
+            android:theme="@style/MySuperTheme"/>
         <activity android:name=".NonActivity" />
         <activity android:name=".classbox.activity.AuthActivity" />
 

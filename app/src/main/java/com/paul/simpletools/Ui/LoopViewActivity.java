@@ -23,6 +23,8 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoopViewActivity extends Activity {
 
     LoopView loopview;
@@ -41,7 +43,7 @@ public class LoopViewActivity extends Activity {
         termDatas=LitePal.findAll(TermData.class);
         if(termDatas.size()==0)
         {
-            Toast.makeText(LoopViewActivity.this,"错误！本地数据库损坏，请清除数据后重试！",Toast.LENGTH_SHORT).show();
+            Toasty.error(LoopViewActivity.this,"错误！本地数据库损坏，请清除数据后重试！",Toast.LENGTH_SHORT).show();
             finish();
         }
         for(TermData item:termDatas)
@@ -63,7 +65,7 @@ public class LoopViewActivity extends Activity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoopViewActivity.this,termDatas.get(choice).getTermName()+" 切换成功！",Toast.LENGTH_SHORT).show();
+                Toasty.success(LoopViewActivity.this,termDatas.get(choice).getTermName()+" 切换成功！",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.putExtra(MySupport.CHOOSE_TERM_STATUS,termDatas.get(choice).getTermName());
                 LoopViewActivity.this.setResult(RESULT_OK, intent);

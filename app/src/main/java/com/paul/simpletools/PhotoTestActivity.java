@@ -3,8 +3,13 @@ package com.paul.simpletools;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -36,7 +41,13 @@ import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.GeneralBasicParams;
 import com.baidu.ocr.sdk.model.GeneralResult;
 import com.baidu.ocr.sdk.model.WordSimple;
+import com.paul.simpletools.Tools.UsersEditActivity;
+import com.paul.simpletools.dataBase.EveryDayBean;
+import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
+import com.paul.simpletools.dataBase.TermData;
+
+import org.litepal.LitePal;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -46,6 +57,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import es.dmoral.toasty.Toasty;
 
 public class PhotoTestActivity extends AppCompatActivity {
     private Button button;
@@ -63,6 +76,8 @@ public class PhotoTestActivity extends AppCompatActivity {
     private String courseName;                              //传过来的课程名称
 
     private ImageView imageView;
+    private Integer iCount = 0;
+    private ProgressDialog pDialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +92,7 @@ public class PhotoTestActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showprocess();
                 getOCR(mImagePath);
             }
         });
@@ -311,6 +327,7 @@ public class PhotoTestActivity extends AppCompatActivity {
                 }
                 //file.delete();
                 //String返回
+                pDialog.cancel();
                 showAlterDialog(sb.toString());
 
                 // json格式返回字符串result.getJsonRes())
@@ -329,11 +346,25 @@ public class PhotoTestActivity extends AppCompatActivity {
         alterDiaglog.setIcon(R.mipmap.ic_launcher);//图标
         alterDiaglog.setTitle("文字识别结果");//文字
         alterDiaglog.setMessage(message);//提示消息
+        final String tag=message;
         //积极的选择
         alterDiaglog.setPositiveButton("好的", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(PhotoTestActivity.this,"哈哈百度无敌(#^.^#)",Toast.LENGTH_SHORT).show();
+                Toasty.success(PhotoTestActivity.this,"哈哈(#^.^#)",Toast.LENGTH_SHORT).show();
+            }
+        });
+        alterDiaglog.setNegativeButton("复制内容",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ClipboardManager clipboard = (ClipboardManager)getSystemService(PhotoTestActivity.CLIPBOARD_SERVICE);
+                //创建ClipData对象
+                //第一个参数只是一个标记，随便传入。
+                //第二个参数是要复制到剪贴版的内容
+                ClipData clip = ClipData.newPlainText("课表拍拍",tag );
+                //传入clipdata对象.
+                clipboard.setPrimaryClip(clip);
+                Toasty.success(PhotoTestActivity.this,"已复制到剪贴板",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -382,6 +413,37 @@ public class PhotoTestActivity extends AppCompatActivity {
         }
         return degree;
     }
+    void showprocess() {
 
+        pDialog = new ProgressDialog(PhotoTestActivity.this);
+        pDialog.setTitle("文字识别");
+        pDialog.setIcon(R.mipmap.ic_launcher);
+        pDialog.setMessage("正在识别中，速度取决于您的网速和照片大小，请耐心等待！");
+        pDialog.setCancelable(false);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.show();
+
+        // 创建线程实例
+        new Thread() {
+            public void run() {
+
+                try {
+                    while (iCount <= 50) {
+                        // 由线程来控制进度。
+                        pDialog.setProgress(iCount++);
+                        Thread.sleep(80);
+                    }
+                    pDialog.cancel();
+                    //Toasty.error(PhotoTestActivity.this,"识别超时！",Toasty.LENGTH_SHORT).show();
+
+                } catch (InterruptedException e) {
+                    pDialog.cancel();
+                }
+            }
+
+        }.start();
+
+
+    }
 
 }
