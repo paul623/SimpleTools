@@ -381,7 +381,7 @@ public class AuthActivity extends AppCompatActivity {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(RESULT_OBJ, (Serializable) superResult);
                                     intent.putExtras(bundle);
-                                    AuthActivity.this.setResult(RESULT_STATUS, intent);
+                                    AuthActivity.this.setResult(130, intent);
                                      Toasty.error(AuthActivity.this,"重复添加！已覆盖原表！",Toast.LENGTH_SHORT).show();
                                     finish();
                                 }

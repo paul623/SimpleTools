@@ -71,7 +71,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import cn.bmob.v3.update.BmobUpdateAgent;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -483,7 +482,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                 .callback(new ISchedule.OnItemLongClickListener() {
                     @Override
                     public void onLongClick(View v, int day, int start) {
-                        Toasty.info(getActivity(),
+                        /*Toasty.info(getActivity(),
                                 "长按:周" + day  + ",第" + start + "节",
                                 Toast.LENGTH_SHORT).show();
                         //startActivity(new Intent(getActivity(), EditCourseActivity.class));
@@ -508,9 +507,9 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                     @Override
                     public void onFlaglayoutClick(int day, int start) {
                         mTimetableView.hideFlaglayout();
-                        Toasty.info(getActivity(),
+                        /*Toasty.info(getActivity(),
                                 "点击了旗标:周" + (day + 1) + ",第" + start + "节",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
                         Intent intent=new Intent(getContext(), EditCourseActivity.class);
                         //schedules = (List<Schedule>) getIntent().getSerializableExtra("SuperLessons");
                         //date = getIntent().getIntExtra("课", 0);

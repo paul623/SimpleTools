@@ -140,26 +140,27 @@ public class TermsManageActivity extends Activity {
                 }
 
             }
+            else if(resultCode==130&&data!=null)
+            {
+                SuperResult scanResult = SuperUtils.getResult(data);
+                if (scanResult.isSuccess()) {
+                    List<MySubject> mySubjects = CourseActivity.changeLesson(scanResult.getLessons());
+                    List<MySubject> lessons=LitePal.where("term=?",mySubjects.get(0).getTerm()).find(MySubject.class);
+                    for(MySubject item:lessons)
+                    {
+                        item.delete();
+                    }
+                    for (MySubject item : mySubjects) {
+                        item.save();
+                    }
+                    termsName.add(mySubjects.get(0).getTerm());
+                    Log.d("TermsManage","执行啦！！！！");
+                    finish();
+                }
+            }
 
         }
-        else if(resultCode==130&&data!=null)
-        {
-            SuperResult scanResult = SuperUtils.getResult(data);
-            if (scanResult.isSuccess()) {
-                List<MySubject> mySubjects = CourseActivity.changeLesson(scanResult.getLessons());
-                List<MySubject> lessons=LitePal.where("term=?",mySubjects.get(0).getTerm()).find(MySubject.class);
-                for(MySubject item:lessons)
-                {
-                    item.delete();
-                }
-                for (MySubject item : mySubjects) {
-                    item.save();
-                }
-                termsName.add(mySubjects.get(0).getTerm());
-                Log.d("TermsManage","执行啦！！！！");
-                finish();
-            }
-        }
+
 
     }
 }
