@@ -158,37 +158,46 @@ public class EditCourseActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO 传数据
+
                         if(even_number_status==signal_number_status)//说明没有选中，即全都要上
                         {
+                            Log.d("我恨你","执行全部筛选");
                             weeks.clear();
+
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
                                 weeks.add(i);
                             }
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         else if(even_number_status)
                         {
+                            Log.d("我恨你","执行偶数筛选");
                             weeks.clear();
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
-                                Log.d("我恨你",i+"");
                                 if(i%2==0)
                                 {
                                     weeks.add(i);
                                 }
                             }
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         else if(signal_number_status)
                         {
                             weeks.clear();
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
+                                Log.d("我恨你","奇数进程");
                                 if(i%2!=0)
                                 {
-                                    Log.d("我恨你","奇数进程");
                                     weeks.add(i);
                                 }
                             }
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         weekselect.setLeftString(weeks.toString());
                         Toasty.success(EditCourseActivity.this,"设置成功！",Toast.LENGTH_SHORT).show();

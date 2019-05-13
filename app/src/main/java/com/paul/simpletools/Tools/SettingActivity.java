@@ -102,7 +102,7 @@ public class SettingActivity extends AppCompatActivity {
         hour=sp.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
         minute=sp.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
         String out=INTime(hour,minute);
-        stv_7.setRightBottomString(out);
+        stv_7.setRightString(out);
         final SharedPreferences.Editor editor=sp.edit();
         stv_1.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override

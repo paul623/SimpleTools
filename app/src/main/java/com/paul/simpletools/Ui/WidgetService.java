@@ -72,41 +72,50 @@ public class WidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            MySubject curpostion=courses.get(position);
-            String jc = curpostion.getStart()+"~"+(curpostion.getStart()+curpostion.getStep()-1);
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.course_list_widget);
-            views.setTextViewText(R.id.name, curpostion.getName());
-            views.setTextViewText(R.id.info, curpostion.getTeacher()+" "+curpostion.getRoom());
-            views.setTextViewText(R.id.time, jc);
-            //是否开启点击小部件跳转到主界面
-            Intent intent = new Intent(context, CourseActivity.class);
-            views.setOnClickFillInIntent(R.id.widget_list_item, intent);
-            //显示是否显示上课状态
-            if (true) {
-                views.setViewVisibility(R.id.status, View.GONE);
-            } else {
-                views.setViewVisibility(R.id.status, View.VISIBLE);
-                switch (PROCESSING) {
-                    case OVER:
-                        views.setTextViewText(R.id.status, "已结束");
-                        views.setTextColor(R.id.status, Color.parseColor("#666666"));
-                        break;
-                    case PROCESSING:
-                        views.setTextViewText(R.id.status, "正在上课");
-                        views.setTextColor(R.id.status, Color.parseColor("#3de1ad"));
-                        break;
-                    case NOTSTART:
-                        views.setTextViewText(R.id.status, "未开始");
-                        views.setTextColor(R.id.status, Color.parseColor("#e9e7ef"));
-                        break;
-                    case READY:
-                        views.setTextViewText(R.id.status, "即将开始");
-                        views.setTextColor(R.id.status, Color.parseColor("#ffa400"));
-                        break;
+            if(courses.size()==0&&position==0)
+            {
+                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.course_list_widget);
+                views.setTextViewText(R.id.name, "今天没有课呀~");
+                return views;
+            }
+            else {
+                MySubject curpostion = courses.get(position);
+                String jc = curpostion.getStart() + "~" + (curpostion.getStart() + curpostion.getStep() - 1);
+                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.course_list_widget);
+                views.setTextViewText(R.id.name, curpostion.getName());
+                views.setTextViewText(R.id.info, curpostion.getTeacher() + " " + curpostion.getRoom());
+                views.setTextViewText(R.id.time, jc);
+                //是否开启点击小部件跳转到主界面
+                Intent intent = new Intent(context, CourseActivity.class);
+                views.setOnClickFillInIntent(R.id.widget_list_item, intent);
+                //显示是否显示上课状态
+                if (true) {
+                    views.setViewVisibility(R.id.status, View.GONE);
+                } else {
+                    views.setViewVisibility(R.id.status, View.VISIBLE);
+                    switch (PROCESSING) {
+                        case OVER:
+                            views.setTextViewText(R.id.status, "已结束");
+                            views.setTextColor(R.id.status, Color.parseColor("#666666"));
+                            break;
+                        case PROCESSING:
+                            views.setTextViewText(R.id.status, "正在上课");
+                            views.setTextColor(R.id.status, Color.parseColor("#3de1ad"));
+                            break;
+                        case NOTSTART:
+                            views.setTextViewText(R.id.status, "未开始");
+                            views.setTextColor(R.id.status, Color.parseColor("#e9e7ef"));
+                            break;
+                        case READY:
+                            views.setTextViewText(R.id.status, "即将开始");
+                            views.setTextColor(R.id.status, Color.parseColor("#ffa400"));
+                            break;
+                    }
                 }
+                return views;
             }
             //Log.d(TAG, "status: " + getStatus(jc));
-            return views;
+
         }
 
         @Override
