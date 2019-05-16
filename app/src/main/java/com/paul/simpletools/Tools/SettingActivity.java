@@ -235,7 +235,7 @@ public class SettingActivity extends AppCompatActivity {
         stv_13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this,TermsManageActivity.class));
+                startActivityForResult(new Intent(SettingActivity.this,TermsManageActivity.class),2233);
             }
         });
         stv_1.setSwitchIsChecked(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
@@ -302,6 +302,21 @@ public class SettingActivity extends AppCompatActivity {
                     editor.apply();
                 }
                 break;
+            case 2233:
+            {
+                if(data!=null)
+                {
+                    String termName=data.getStringExtra(MySupport.CHOOSE_TERM_STATUS);
+                    List<MySubject> mySubjects=LitePal.where("term=?",termName).find(MySubject.class);
+                    messageEvent.setMySubjects(mySubjects);
+                    SharedPreferences sharedPreferences=getSharedPreferences(MySupport.LOCAL_COURSE,MODE_PRIVATE);
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putString(MySupport.CHOOSE_TERM_STATUS,termName);
+                    editor.apply();
+                    Toasty.success(SettingActivity.this,termName+"已添加并应用成功",Toasty.LENGTH_SHORT).show();
+                }
+            }
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);

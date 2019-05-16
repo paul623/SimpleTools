@@ -39,6 +39,7 @@ public class ViewCourseActivity extends Activity {
         superLesson = (List<Schedule>) getIntent().getSerializableExtra("SuperLessons");
         date = getIntent().getIntExtra("date", 0);
         term=getIntent().getStringExtra("term");
+        Log.d("最后的测试","查看课程信息-学期： "+term);
         if (date % 2 == 0&&superLesson.size()>1) {
             cur_week = 1;
         }

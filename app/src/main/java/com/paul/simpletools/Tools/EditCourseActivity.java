@@ -41,6 +41,7 @@ public class EditCourseActivity extends Activity {
     private Boolean even_number_status,signal_number_status;
     private Integer start_lessons,step_lessons;
     private String term;//当前学期
+    private String TAG="EditCourseActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,7 @@ public class EditCourseActivity extends Activity {
         schedules = (List<Schedule>) getIntent().getSerializableExtra("SuperLessons");
         date = getIntent().getIntExtra("课", 0);
         term=getIntent().getStringExtra("学期");
+        Log.d("最后的测试","编辑课程-学期: "+term);
         init();
     }
     void init()
@@ -110,7 +112,7 @@ public class EditCourseActivity extends Activity {
         np_end.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         btn_even=view.findViewById(R.id.rb_even);
         btn_signal=view.findViewById(R.id.rb_signal);
-        np_start.setMinValue(schedules.get(date).getWeekList().get(0));
+        np_start.setMinValue(1);
         np_start.setMaxValue(20);
         np_start.setWrapSelectorWheel(false);
         np_end.setMinValue(schedules.get(date).getWeekList().get(0)+1);
@@ -119,6 +121,8 @@ public class EditCourseActivity extends Activity {
         List<Integer> a=schedules.get(date).getWeekList();
         start=a.get(0)+"";
         end=a.get(a.size()-1)+"";
+        Log.d(TAG,"start: "+start);
+        Log.d(TAG,"end: "+end);
         np_end.setValue(a.get(a.size()-1));
         np_start.setValue(a.get(0));
 
@@ -158,37 +162,47 @@ public class EditCourseActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO 传数据
+
                         if(even_number_status==signal_number_status)//说明没有选中，即全都要上
                         {
+                            Log.d("我恨你","执行全部筛选");
                             weeks.clear();
+
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
                                 weeks.add(i);
                             }
+                            Log.d("我恨你",weeks.toString());
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         else if(even_number_status)
                         {
+                            Log.d("我恨你","执行偶数筛选");
                             weeks.clear();
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
-                                Log.d("我恨你",i+"");
                                 if(i%2==0)
                                 {
                                     weeks.add(i);
                                 }
                             }
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         else if(signal_number_status)
                         {
                             weeks.clear();
                             for(int i=Integer.parseInt(start);i<=Integer.parseInt(end);i++)
                             {
+                                Log.d("我恨你","奇数进程");
                                 if(i%2!=0)
                                 {
-                                    Log.d("我恨你","奇数进程");
                                     weeks.add(i);
                                 }
                             }
+                            even_number_status=false;
+                            signal_number_status=false;
                         }
                         weekselect.setLeftString(weeks.toString());
                         Toasty.success(EditCourseActivity.this,"设置成功！",Toast.LENGTH_SHORT).show();
@@ -225,7 +239,7 @@ public class EditCourseActivity extends Activity {
         lesson_np_start.setValue(start_lessons);
         lesson_np_start.setWrapSelectorWheel(false);
         lesson_start=start_lessons+"";
-        lesson_end=start_lessons+step_lessons-1+"";
+        lesson_end=step_lessons+"";
         lesson_np_start.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -284,17 +298,21 @@ public class EditCourseActivity extends Activity {
         {
             for(MySubject item:mySubjects)
             {
+                Log.d("最后的测试","执行");
                 if(item.getDay()==schedules.get(date).getDay())
                 {
+                    Log.d("最后的测试",schedules.get(date).getDay()+"   sdiqwhdiwfdhiw");
                     flag=true;
                     item.setName(name.getText().toString());
                     item.setTeacher(teaher.getText().toString());
                     item.setWeekList(weeks);
+                    Log.d("编辑课程","weeks: "+weeks.toString());
                     item.setStart(start_lessons);
                     item.setRoom(location.getText().toString());
                     item.setStep(step_lessons);
                     item.save();
-                    Log.d("测试添加课程","已执行保存");
+                    Log.d("编辑课程","item: "+item.getWeekList());
+                    Log.d("编辑课程","已执行保存");
                     break;
                 }
             }
@@ -317,6 +335,7 @@ public class EditCourseActivity extends Activity {
             item.setName(name.getText().toString());
             item.setTeacher(teaher.getText().toString());
             item.setWeekList(weeks);
+            Log.d("编辑课程","weeks: "+weeks.toString());
             item.setStart(start_lessons);
             item.setRoom(location.getText().toString());
             item.setStep(step_lessons);

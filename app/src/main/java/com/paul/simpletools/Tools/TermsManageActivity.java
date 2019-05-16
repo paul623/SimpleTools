@@ -135,6 +135,9 @@ public class TermsManageActivity extends Activity {
                         item.save();
                     }
                     termsName.add(mySubjects.get(0).getTerm());
+                    Intent intent=new Intent();
+                    intent.putExtra(MySupport.CHOOSE_TERM_STATUS,mySubjects.get(0).getTerm());
+                    TermsManageActivity.this.setResult(2233,intent);
                     Log.d("TermsManage","执行啦！！！！");
                     finish();
                 }

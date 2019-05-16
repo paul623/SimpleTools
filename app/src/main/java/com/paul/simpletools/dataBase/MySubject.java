@@ -106,6 +106,7 @@ public class MySubject extends LitePalSupport implements ScheduleEnable{
     }
 
     public void setWeekList(List<Integer> weekList) {
+        this.weekList.clear();
         this.weekList = weekList;
     }
 
@@ -188,8 +189,6 @@ public class MySubject extends LitePalSupport implements ScheduleEnable{
         this.room = "";
         this.teacher = "";
         List<Integer> list=new ArrayList<>();
-        list.add(1);
-        list.add(2);
         this.weekList =list ;
         this.start = 1;
         this.step = 1;

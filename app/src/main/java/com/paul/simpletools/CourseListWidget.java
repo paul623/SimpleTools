@@ -21,9 +21,12 @@ import com.paul.simpletools.dataBase.MySupport;
 import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Implementation of App Widget functionality.
@@ -58,6 +61,7 @@ public class CourseListWidget extends AppWidgetProvider {
         //判断是否开启点击跳转主界面功能
         if (true) {
             Intent intent = new Intent(context, CourseActivity.class);
+            Log.d("CourseListWidget嘿嘿","应该执行了跳转才对");
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.header, pendingIntent);
             views.setPendingIntentTemplate(R.id.course_list, pendingIntent);
@@ -73,7 +77,7 @@ public class CourseListWidget extends AppWidgetProvider {
 
         //判断今天有没有课
         if (noCourse) {
-            views.setViewVisibility(R.id.course_list, View.GONE);
+            views.setViewVisibility(R.id.course_list, View.INVISIBLE);
         } else {
             views.setViewVisibility(R.id.course_list, View.VISIBLE);
         }
@@ -112,11 +116,12 @@ public class CourseListWidget extends AppWidgetProvider {
                 case UPDATE_ACTION_NO_COURSES:
                     noCourse = true;
                     onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(thisWidget));
-                    break;
+
             }
         }
         super.onReceive(context, intent);
     }
+
 
 }
 

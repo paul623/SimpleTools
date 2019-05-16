@@ -32,7 +32,7 @@ public class MySupport {
     public static String CONFIG_HEAD="config_head";
     public static int  REQUEST_IMAGE_CAPTURE = 1;
     public static int  REQUEST_TAKE_PHOTO = 1;
-    public static final String UpdateURL="https://www.yuque.com/docs/share/3d3b7318-c4d4-4bf4-a46e-6591ed8eab7b";
+    public static final String UpdateURL="https://www.coolapk.com/apk/229807";
     public static final String DATE_LOCALDATE="date_localdate";
     public static final String REQUEST_WORDS="http://open.iciba.com/dsapi/";
     public static final String REQUEST_WORDS2="https://v1.hitokoto.cn/";

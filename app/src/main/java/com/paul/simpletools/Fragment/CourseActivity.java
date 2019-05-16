@@ -3,6 +3,7 @@ package com.paul.simpletools.Fragment;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -96,6 +97,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
     //记录切换的周次，不一定是当前周
     public int target = -1;
     String termData="";
+    private Integer countClick=0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -155,7 +157,39 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         headicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toasty.info(getContext(),"别戳我~",Toast.LENGTH_SHORT).show();
+                switch (countClick){
+                    case 0:
+                        Toasty.warning(getContext(),"别戳我~",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 4:
+                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        Toasty.warning(getContext(),"你很无聊鸭~",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6:
+                        Toasty.success(getContext(),"好吧~你赢了，一个番茄已到账",Toast.LENGTH_SHORT).show();
+                        SharedPreferences  sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sp.edit();
+                        Integer number=sp.getInt(MySupport.LOCAL_TOMATO,0);
+                        editor.putInt(MySupport.LOCAL_TOMATO,number+1);
+                        editor.apply();
+                        break;
+                        default:
+                            Toasty.info(getContext(),"别太贪心哦~",Toast.LENGTH_SHORT).show();
+                            break;
+                }
+                countClick++;
+
             }
         });
         setHeadIcon();//同步头像
@@ -403,6 +437,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                 }
                 else
                 {
+                    Log.d("修改课程","执行了修改");
                     List<MySubject> mm=LitePal.where("term=?",termData).find(MySubject.class);
                     mTimetableView.dataSource().clear();
                     mTimetableView.source(mm);
@@ -472,9 +507,10 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                         Log.d("mTimetableView","监听到"+clickSchedule.get(0).getName());
                         Intent intent=new Intent(getActivity(), ViewCourseActivity.class);
                         intent.putExtra("date",temp_curWeek);
-                        intent.putExtra("term",termData);
+                        intent.putExtra("term",mySubjects.get(0).getTerm());
                         Bundle bundle=new Bundle();
                         bundle.putSerializable("SuperLessons",(Serializable) scheduleList);
+                        Log.d("mTimetableView","监听到"+clickSchedule.get(0).getName()+scheduleList.get(0).getWeekList().toString());
                         intent.putExtras(bundle);
                         startActivityForResult(intent,22);
                     }
@@ -521,7 +557,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                         bundle.putSerializable("SuperLessons",(Serializable) scheduleList);
                         intent.putExtras(bundle);
                         intent.putExtra("课",0);
-                        intent.putExtra("学期",termData);
+                        intent.putExtra("学期",mySubjects.get(0).getTerm());
                         startActivityForResult(intent,23);
                     }
                 })

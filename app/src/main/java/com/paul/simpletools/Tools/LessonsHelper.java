@@ -1,9 +1,13 @@
 package com.paul.simpletools.Tools;
 
+import android.util.Log;
+
 import com.paul.simpletools.dataBase.MySubject;
 import com.zhuangfei.timetable.model.Schedule;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,6 +16,34 @@ import java.util.List;
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
 public class LessonsHelper {
+    public static List<MySubject> selectSubjectToShow(List<MySubject> mySubjects)
+    {
+        List<MySubject> goals=new ArrayList<>();
+        SimpleDateFormat formatters = new SimpleDateFormat("HH:mm");
+        Date curDates=new Date(System.currentTimeMillis());
+        String strs=formatters.format(curDates);
+        String []dds=new String[]{};
+        dds = strs.split(":");
+        int dhs = Integer.parseInt(dds[0]);
+        Log.d("进行筛选程序","执行");
+        Log.d("进行筛选程序","当前时间:"+dhs);
+        for(MySubject item:mySubjects)
+        {
+            if(item.getStart()<=4&&dhs<=12)
+            {
+                goals.add(item);
+                Log.d("进行筛选程序","添加上午课程");
+            }
+            else if(item.getStart()>4&&dhs>12)
+            {
+                goals.add(item);
+                Log.d("进行筛选程序","添加下午课程");
+            }
+        }
+        Log.d("进行筛选程序","课程筛选后大小"+goals.size());
+        return goals;
+
+    }
     public static List<Schedule> changeToShedule(List<MySubject> mySubjects)
     {
         List<Schedule> schedules=new ArrayList<>();
