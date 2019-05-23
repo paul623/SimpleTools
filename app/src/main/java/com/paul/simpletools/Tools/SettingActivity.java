@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class SettingActivity extends AppCompatActivity {
 
     SuperTextView stv_1,stv_2,stv_3,stv_4,stv_5,stv_6,stv_7,stv_8,stv_9,stv_10,stv_11,stv_12,stv_13;
     Boolean stv1,stv2,stv3,stv4,stv6;
+    SuperTextView stv_back;
     SharedPreferences sp;
     MessageEvent messageEvent;
     private int hour,minute;
@@ -84,6 +86,7 @@ public class SettingActivity extends AppCompatActivity {
     }
     private void initSuperTextView()
     {
+        stv_back=findViewById(R.id.setting_title);
         stv_1=findViewById(R.id.stv_1);//隐藏非本周课程
         stv_2=findViewById(R.id.stv_2);//隐藏周末
         stv_3=findViewById(R.id.stv_3);//最大节次
@@ -104,6 +107,12 @@ public class SettingActivity extends AppCompatActivity {
         String out=INTime(hour,minute);
         stv_7.setRightBottomString(out);
         final SharedPreferences.Editor editor=sp.edit();
+        stv_back.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
+            @Override
+            public void onClickListener(ImageView imageView) {
+                finish();
+            }
+        });
         stv_1.setSwitchCheckedChangeListener(new SuperTextView.OnSwitchCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

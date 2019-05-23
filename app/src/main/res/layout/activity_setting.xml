@@ -10,10 +10,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <com.allen.library.SuperTextView
+            android:id="@+id/setting_title"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:sCenterTextString="设置"
-            app:sCenterTextSize="20dp"/>
+            app:sCenterTextSize="20dp"
+            app:sLeftIconRes="@drawable/album_back"
+            app:sLeftIconHeight="30dp"
+            app:sLeftIconWidth="30dp"
+            app:sUseRipple="false"/>
         <com.allen.library.SuperTextView
             android:layout_width="match_parent"
             android:layout_height="30dp"

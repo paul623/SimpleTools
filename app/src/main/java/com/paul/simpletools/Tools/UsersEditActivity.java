@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.allen.library.SuperTextView;
 import com.paul.simpletools.R;
 import com.paul.simpletools.dataBase.EveryDayBean;
 import com.paul.simpletools.dataBase.MySubject;
@@ -31,6 +33,7 @@ import java.util.List;
 public class UsersEditActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private ListView listView;
+    private SuperTextView stv_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,5 +78,12 @@ public class UsersEditActivity extends AppCompatActivity {
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        stv_back=findViewById(R.id.stv_everyday_title);
+        stv_back.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
+            @Override
+            public void onClickListener(ImageView imageView) {
+                finish();
+            }
+        });
     }
 }

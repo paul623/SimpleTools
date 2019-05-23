@@ -17,9 +17,11 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.allen.library.SuperTextView;
 import com.paul.simpletools.Fragment.CourseActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.classbox.activity.AuthActivity;
@@ -43,6 +45,7 @@ public class TermsManageActivity extends Activity {
     List<TermData> termDatas;
     List<String> termsName;
     ArrayAdapter<String> adapter;
+    SuperTextView stv_back;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +122,13 @@ public class TermsManageActivity extends Activity {
                 Intent intent=new Intent(TermsManageActivity.this, AuthActivity.class);
                 intent.putExtra(AuthActivity.FLAG_TYPE, AuthActivity.TYPE_IMPORT);
                 startActivityForResult(intent,11);
+            }
+        });
+        stv_back=findViewById(R.id.termsmanger_title);
+        stv_back.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
+            @Override
+            public void onClickListener(ImageView imageView) {
+                finish();
             }
         });
     }

@@ -2,12 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ly_user"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="30dp"
     android:fitsSystemWindows="true"
-    android:clipToPadding="true">
+    android:clipToPadding="true"
+    android:orientation="vertical">
+    <com.allen.library.SuperTextView
+        android:id="@+id/stv_everyday_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/album_back"
+        app:sLeftIconWidth="30dp"
+        app:sLeftIconHeight="30dp"
+        app:sLeftTextSize="18sp"
+        app:sCenterTextString="每日一句"
+        app:sCenterTextSize="18sp"
+        app:sUseRipple="false"
+        android:background="#FFFFFF"/>
+
     <ListView
         android:id="@+id/lv_1"
         android:layout_width="match_parent"

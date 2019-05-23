@@ -68,6 +68,8 @@ public class MyLessonListAdapter extends BaseAdapter {
         Glide.with(context).load(file).into(imageview);
         TextView textview = layout.findViewById(R.id.album_lesson_tv);
         textview.setText(names.get(position));
+        TextView textView=layout.findViewById(R.id.album_lesson_tv_count);
+        textView.setText(myPhotoBeans.size()+"张");
         return layout;
     }
 }
