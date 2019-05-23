@@ -1,6 +1,8 @@
 package com.paul.simpletools.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.paul.simpletools.R;
+import com.paul.simpletools.Tools.AlbumHelper;
+import com.paul.simpletools.dataBase.MyPhotoBean;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/5/23 10：57
@@ -19,27 +26,31 @@ import java.util.ArrayList;
  */
 public class MyLessonListAdapter extends BaseAdapter {
     private Context context;
-    //ArrayList<MyImage> image;
-   // ArrayList<String>  className;
+    private List<MyPhotoBean> myPhotoBean;
+    private List<String> names;
     private LayoutInflater mLayoutInflater;
 
-    public MyLessonListAdapter(ArrayList image, ArrayList className, Context context){
+    public MyLessonListAdapter(List<MyPhotoBean> myPhotoBean, List<String> names, Context context){
         this.context = context;
-        //this.image = image;
-        //this.className = className;
+        this.myPhotoBean = myPhotoBean;
+        this.names = names;
         mLayoutInflater = LayoutInflater.from(context);
     }
-
+    public void refreash(List<MyPhotoBean> myPhotoBean, List<String> names)
+    {
+        this.myPhotoBean.clear();
+        this.names.clear();
+        this.myPhotoBean.addAll(myPhotoBean);
+        this.names.addAll(names);
+    }
     @Override
     public int getCount() {
-        //return image.size();
-        return 1;
+        return names.size();
     }
 
     @Override
     public Object getItem(int position) {
-        //return image.get(position);
-        return 1;
+        return position;
     }
 
     @Override
@@ -47,21 +58,16 @@ public class MyLessonListAdapter extends BaseAdapter {
         return position;
     }
 
-    static class ViewHolder{
-        public TextView tv_1;
-        public ImageView iv_1, iv_2;
-    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         View layout = mLayoutInflater.inflate(R.layout.album_lesson_listitem,null);
         ImageView imageview = layout.findViewById(R.id.album_lesson_iv);
-        //MyImage image1 = image.get(position);
-        //imageview.setImageResource(image1.getimage());
+        List<MyPhotoBean> myPhotoBeans=AlbumHelper.splitWithName(myPhotoBean,names.get(position));
+        File file=new File(myPhotoBeans.get(0).getPhotoPath());
+        Glide.with(context).load(file).into(imageview);
         TextView textview = layout.findViewById(R.id.album_lesson_tv);
-        //String classname = className.get(position);
-        //textview.setText(classname);
+        textview.setText(names.get(position));
         return layout;
     }
 }

@@ -52,4 +52,6 @@ public class MySupport {
     public static final String[] REQUEST_STATUS_SELECTORS = new String[]{"双语","随机","动漫","漫画","游戏","小说","原创","网络","其他"};
     public static final String CHOOSE_TERM_STATUS="choose_term_status";
     public static final String[] DEFAULT_COURSE_STARTTIME = new String[]{"8:00", "8:55", "10:00", "10:55","14:00", "14:55", "16:00", "16:55","17:50", "18:35", "19:00", "20:00"};
+    public static final Integer REQUEST_ALUBUM_VIEWPHOTO=108;
+    public static final Integer REQUEST_ALUBUM_SELECTPHOTO=109;
 }

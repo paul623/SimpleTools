@@ -32,12 +32,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.paul.simpletools.CourseListWidget;
+import com.paul.simpletools.LessonAlbum.AlbumLessonSelectActivity;
 import com.paul.simpletools.PhotoTestActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.AlarmReceiver;
@@ -154,42 +156,11 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         LitePal.initialize(getContext());//初始化dataBase
         headicon=getView().findViewById(R.id.course_head_icon);
-        headicon.setOnClickListener(new View.OnClickListener() {
+        headicon.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
             @Override
-            public void onClick(View v) {
-                switch (countClick){
-                    case 0:
-                        Toasty.warning(getContext(),"别戳我~",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 4:
-                        Toasty.warning(getContext(),"还戳╭(╯^╰)╮",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 5:
-                        Toasty.warning(getContext(),"你很无聊鸭~",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 6:
-                        Toasty.success(getContext(),"好吧~你赢了，一个番茄已到账",Toast.LENGTH_SHORT).show();
-                        SharedPreferences  sp=getActivity().getSharedPreferences(MySupport.LOCAL_COURSE, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor=sp.edit();
-                        Integer number=sp.getInt(MySupport.LOCAL_TOMATO,0);
-                        editor.putInt(MySupport.LOCAL_TOMATO,number+1);
-                        editor.apply();
-                        break;
-                        default:
-                            Toasty.info(getContext(),"别太贪心哦~",Toast.LENGTH_LONG).show();
-                            break;
-                }
-                countClick++;
-
+            public void onClickListener(ImageView imageView) {
+                Intent intent=new Intent(getActivity(), AlbumLessonSelectActivity.class);
+                startActivity(intent);
             }
         });
         setHeadIcon();//同步头像

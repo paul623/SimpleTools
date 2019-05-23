@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.paul.simpletools"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 12
         versionName "1.1.1"
@@ -60,4 +60,6 @@ dependencies {
     //甜品级吐司~大爱！！！
     implementation 'com.github.GrenderG:Toasty:1.4.2'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

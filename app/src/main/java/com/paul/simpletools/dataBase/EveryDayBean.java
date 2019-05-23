@@ -10,7 +10,7 @@ import org.litepal.crud.LitePalSupport;
  * 邮箱:zhubaoluo@outlook.com
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
-public class EveryDayBean extends LitePalSupport {
+public class EveryDayBean  extends LitePalSupport {
     private String content;
     private String auther;
     private String date;

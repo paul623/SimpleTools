@@ -23,7 +23,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LessonAlbum.AlbumViewPhotoActivity"></activity>
         <activity android:name=".LessonAlbum.AlbumPhotoSelectActivity" />
-        <activity android:name=".LessonAlbum.AlbumWeelSelectActivity" />
         <activity android:name=".LessonAlbum.AlbumLessonSelectActivity" />
 
         <receiver android:name=".CourseListWidget">

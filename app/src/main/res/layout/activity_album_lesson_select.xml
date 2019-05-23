@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/stv_lessonselect"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/album_back"
+        app:sLeftTextSize="18sp"
+        app:sCenterTextString="相册"
+        app:sCenterTextSize="18sp"
+        app:sUseRipple="false"
+        android:background="#FFFFFF"/>
 
     <ListView
         android:id="@+id/album_lessonselect_lv"

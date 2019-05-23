@@ -4,11 +4,7 @@
     <version value="3"/>
     <list>
         <mapping class="com.paul.simpletools.dataBase.MySubject"/>
-    </list>
-    <list>
         <mapping class="com.paul.simpletools.dataBase.EveryDayBean"/>
-    </list>
-    <list>
         <mapping class="com.paul.simpletools.dataBase.TermData"/>
     </list>
 </litepal>
