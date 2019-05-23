@@ -185,7 +185,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                         editor.apply();
                         break;
                         default:
-                            Toasty.info(getContext(),"别太贪心哦~",Toast.LENGTH_SHORT).show();
+                            Toasty.info(getContext(),"别太贪心哦~",Toast.LENGTH_LONG).show();
                             break;
                 }
                 countClick++;

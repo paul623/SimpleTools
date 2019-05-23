@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/album_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/album_back"
+            android:background="@color/white"
+            android:layout_marginLeft="15dp"
+            />
+
+        <ImageButton
+            android:id="@+id/ib_note"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/album_note"
+            android:background="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="60dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_ocr"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/album_ocr"
+            android:background="@color/white"
+            android:layout_marginLeft="80dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/album_delete"
+            android:background="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="80dp"/>
+
+    </LinearLayout>
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/pv_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+</LinearLayout>

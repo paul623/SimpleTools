@@ -94,7 +94,7 @@
                 android:layout_height="80dp"
                 android:padding="3dp"
                 android:background="@drawable/image_corner_style"
-                android:src="@drawable/ic_super" />
+                android:src="@drawable/icon_header" />
 
         </LinearLayout>
         <LinearLayout

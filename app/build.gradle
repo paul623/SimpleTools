@@ -59,4 +59,5 @@ dependencies {
     implementation 'com.weigan:loopView:0.1.2'
     //甜品级吐司~大爱！！！
     implementation 'com.github.GrenderG:Toasty:1.4.2'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 }
