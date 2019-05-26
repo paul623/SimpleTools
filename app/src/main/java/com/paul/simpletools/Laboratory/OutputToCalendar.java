@@ -306,7 +306,15 @@ public class OutputToCalendar extends AppCompatActivity {
                         Toasty.info(OutputToCalendar.this, "没有事件可以删除", Toast.LENGTH_SHORT).show();
                     } else {
                         for(CalendarEvent item:events2) {
-                           CalendarProviderManager.deleteCalendarEvent(OutputToCalendar.this, item.getId());
+                            for(MySubject mySubject:mySubjects)
+                            {
+                                if(mySubject.getName().equals(item.getTitle()))
+                                {
+                                    CalendarProviderManager.deleteCalendarEvent(OutputToCalendar.this, item.getId());
+                                    break;
+                                }
+                            }
+
                         }
                         flag=false;
                         SharedPreferences.Editor editor=sp.edit();
