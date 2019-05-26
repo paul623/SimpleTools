@@ -3,10 +3,13 @@ package com.paul.simpletools.LessonAlbum;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -78,8 +81,14 @@ public class AlbumViewPhotoActivity extends AppCompatActivity {
         btn_ocr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showprocess();
-                getOCR(photoPath);
+                if(isNetworkConnected(AlbumViewPhotoActivity.this)) {
+                    showprocess();
+                    getOCR(photoPath);
+                }
+                else
+                {
+                    Toasty.info(AlbumViewPhotoActivity.this,"没有网哦~",Toasty.LENGTH_SHORT).show();
+                }
             }
         });
         btn_delete=findViewById(R.id.ib_delete);
@@ -171,7 +180,7 @@ public class AlbumViewPhotoActivity extends AppCompatActivity {
             public void onError(OCRError error) {
                 // 调用失败，返回OCRError对象
                 Log.d("百度",error.getCause().toString());
-                Toasty.error(AlbumViewPhotoActivity.this,"识别失败！！！",Toast.LENGTH_SHORT).show();
+                //Toasty.error(AlbumViewPhotoActivity.this,"识别失败！！！",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -237,6 +246,17 @@ public class AlbumViewPhotoActivity extends AppCompatActivity {
         }.start();
 
 
+    }
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
 
 }

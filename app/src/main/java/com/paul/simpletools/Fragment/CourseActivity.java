@@ -469,7 +469,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
                 //透明度
                 //日期栏0.1f、侧边栏0.1f，周次选择栏0.6f
                 //透明度范围为0->1，0为全透明，1为不透明
-                .alpha(0.6f, 0.6f, 0.8f)
+                .alpha(0.6f, 0.3f, 0.7f)
                 .callback(new ISchedule.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, List<Schedule> scheduleList) {

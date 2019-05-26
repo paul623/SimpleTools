@@ -136,6 +136,23 @@
             app:sBottomDividerLineMarginLeft="54dp"
             app:sDividerLineColor="#CFCFCF"
             />
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_laboratory"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftIconWidth="30dp"
+            app:sLeftIconHeight="26dp"
+            app:sLeftIconRes="@drawable/icon_lab"
+            app:sLeftViewMarginLeft="15dp"
+            app:sLeftTextString="实验室"
+            app:sLeftTextSize="16sp"
+            app:sRightIconRes="@drawable/icon_right"
+            app:sRightIconHeight="20dp"
+            app:sRightIconWidth="30dp"
+            android:paddingLeft="10dp"
+            app:sBottomDividerLineMarginLeft="54dp"
+            app:sDividerLineColor="#CFCFCF"
+            />
         <TextView
             android:layout_marginTop="100dp"
             android:layout_width="match_parent"

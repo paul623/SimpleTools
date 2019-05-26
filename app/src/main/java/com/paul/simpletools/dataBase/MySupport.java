@@ -51,7 +51,14 @@ public class MySupport {
     public static final int VIDEO_RESULT_CODE = 102;        //标志符，视频的结果码，判断是哪一个Intent
     public static final String[] REQUEST_STATUS_SELECTORS = new String[]{"双语","随机","动漫","漫画","游戏","小说","原创","网络","其他"};
     public static final String CHOOSE_TERM_STATUS="choose_term_status";
-    public static final String[] DEFAULT_COURSE_STARTTIME = new String[]{"8:00", "8:55", "10:00", "10:55","14:00", "14:55", "16:00", "16:55","17:50", "18:35", "19:00", "20:00"};
+    public static final String[] DEFAULT_COURSE_STARTTIME = new String[]{"8:00", "8:55", "10:00", "10:55","14:00", "14:55", "16:00", "16:55","17:50", "19:00", "19:55","20:50"};
     public static final Integer REQUEST_ALUBUM_VIEWPHOTO=108;
     public static final Integer REQUEST_ALUBUM_SELECTPHOTO=109;
+    public static final String[] RRuleConstantByWeek={"FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=MO;","FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TU;",
+            "FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE;", "FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;","FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=FR;",
+            "FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=SA;","FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=SU;"};
+    public static final String[] RRuleCOnstantByDay={"FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=MO;","FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=TU;",
+            "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=WE;", "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=TH;","FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=FR;",
+            "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=SA;","FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=SU;"};
+    public static final String CALENDAR_STATUS="laboratory_calendar_status";
 }

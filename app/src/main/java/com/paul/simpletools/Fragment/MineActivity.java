@@ -2,6 +2,7 @@ package com.paul.simpletools.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -30,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+import com.paul.simpletools.Laboratory.OutputToCalendar;
 import com.paul.simpletools.LaunchActivity;
 import com.paul.simpletools.R;
 import com.paul.simpletools.Tools.LoadInternet;
@@ -68,6 +72,7 @@ public class MineActivity extends Fragment {
     private SuperTextView stv_contact_us;
     private SuperTextView stv_helper;
     private SuperTextView stv_header;
+    private SuperTextView stv_lab;
     private Handler handler;
     private Integer iCount = 0;
     private ProgressDialog pDialog = null;
@@ -90,6 +95,7 @@ public class MineActivity extends Fragment {
         stv_clear_data = getActivity().findViewById(R.id.stv_clearData);
         stv_helper = getActivity().findViewById(R.id.stv_helper);
         stv_contact_us = getActivity().findViewById(R.id.stv_contact);
+        stv_lab=getActivity().findViewById(R.id.stv_laboratory);
         MyListener myListener = new MyListener();
         stv_mine_users.setOnClickListener(myListener);
         stv_mine_setting.setOnClickListener(myListener);
@@ -97,6 +103,7 @@ public class MineActivity extends Fragment {
         stv_clear_data.setOnClickListener(myListener);
         stv_helper.setOnClickListener(myListener);
         stv_contact_us.setOnClickListener(myListener);
+        stv_lab.setOnClickListener(myListener);
         stv_header = getActivity().findViewById(R.id.head_bar);
         stv_header.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
             @Override
@@ -233,7 +240,9 @@ public class MineActivity extends Fragment {
                 case R.id.stv_clearData:
                     clearLocalData();
                     break;
-
+                case R.id.stv_laboratory:
+                    Intent intent=new Intent(getContext(), OutputToCalendar.class);
+                    startActivity(intent);
             }
 
         }
@@ -304,39 +313,41 @@ public class MineActivity extends Fragment {
     }
 
     private void refreash() throws ParseException {
-        SharedPreferences sp = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
-        String everydaywords = sp.getString(MySupport.LOCAL_WORDS, "");
+        if(isNetworkConnected(getContext())) {
+            SharedPreferences sp = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
+            String everydaywords = sp.getString(MySupport.LOCAL_WORDS, "");
 
-        if (!sp.getString(MySupport.LOCAL_WORDS_DATE, "@").equals("@")
-                && toolsHelper.getWeekNumber(sp.getString(MySupport.LOCAL_WORDS_DATE, "2019-4-20")) == 0) {
-            //不需要进行操作
-        } else {
-            LoadInternet.sendRequestWithOkhttp(getRequestURL(status), new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Toasty.error(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
-                }
+            if (!sp.getString(MySupport.LOCAL_WORDS_DATE, "@").equals("@")
+                    && toolsHelper.getWeekNumber(sp.getString(MySupport.LOCAL_WORDS_DATE, "2019-4-20")) == 0) {
+                //不需要进行操作
+            } else {
+                LoadInternet.sendRequestWithOkhttp(getRequestURL(status), new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Toasty.error(getActivity(), "每日一句更新失败，错误码:" + e, Toast.LENGTH_SHORT).show();
+                    }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String result = response.body().string();
-                    Date date = new Date();
-                    final String heihei = praseJson(status, date, result);
-                    SharedPreferences s = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = s.edit();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    editor.putString(MySupport.LOCAL_WORDS_DATE, sdf.format(date));
-                    editor.putString(MySupport.LOCAL_WORDS, heihei);
-                    editor.apply();
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            stv_header.setLeftString(heihei);
-                        }
-                    };
-                    handler.post(runnable);
-                }
-            });
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Date date = new Date();
+                        final String heihei = praseJson(status, date, result);
+                        SharedPreferences s = getActivity().getSharedPreferences(MySupport.LOCAL_FRAGMENT2, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = s.edit();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        editor.putString(MySupport.LOCAL_WORDS_DATE, sdf.format(date));
+                        editor.putString(MySupport.LOCAL_WORDS, heihei);
+                        editor.apply();
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                stv_header.setLeftString(heihei);
+                            }
+                        };
+                        handler.post(runnable);
+                    }
+                });
+            }
         }
 
     }
@@ -349,7 +360,17 @@ public class MineActivity extends Fragment {
             e.printStackTrace();
         }
     }
-
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
     void showprocess() {
 
         pDialog = new ProgressDialog(getActivity());

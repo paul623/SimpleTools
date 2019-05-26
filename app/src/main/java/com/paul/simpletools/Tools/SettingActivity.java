@@ -105,7 +105,7 @@ public class SettingActivity extends AppCompatActivity {
         hour=sp.getInt(MySupport.CONFIG_TUUISONG_HOUR,7);
         minute=sp.getInt(MySupport.CONFIG_TUUISONG_MINUTE,0);
         String out=INTime(hour,minute);
-        stv_7.setRightBottomString(out);
+        stv_7.setRightString(out);
         final SharedPreferences.Editor editor=sp.edit();
         stv_back.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {
             @Override
@@ -170,7 +170,14 @@ public class SettingActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         hour=i;
                         minute=i1;
-                        Toasty.success(SettingActivity.this,"推送时间已经设置为 "+hour+":"+minute,Toast.LENGTH_SHORT).show();
+                        String minutes=i1+"";
+                        if(minute/10==0)
+                        {
+                            //个位数！！！
+                            minutes="0"+minutes;
+                        }
+
+                        Toasty.success(SettingActivity.this,"推送时间已经设置为 "+hour+":"+minutes,Toast.LENGTH_SHORT).show();
                         sp=SettingActivity.this.getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
                         SharedPreferences.Editor editor1=sp.edit();
                         editor.putInt(MySupport.CONFIG_TUUISONG_HOUR,hour);

@@ -7,14 +7,18 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -28,7 +32,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +48,8 @@ import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.GeneralBasicParams;
 import com.baidu.ocr.sdk.model.GeneralResult;
 import com.baidu.ocr.sdk.model.WordSimple;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.paul.simpletools.LessonAlbum.AlbumViewPhotoActivity;
 import com.paul.simpletools.Tools.UsersEditActivity;
 import com.paul.simpletools.dataBase.EveryDayBean;
 import com.paul.simpletools.dataBase.MySubject;
@@ -61,8 +70,11 @@ import java.util.Date;
 import es.dmoral.toasty.Toasty;
 
 public class PhotoTestActivity extends AppCompatActivity {
-    private Button button;
-    private SuperTextView textView;
+    private PhotoView photoView;
+    private ProgressDialog pDialog = null;
+    private ImageButton btn_ocr,btn_delete,btn_back,btn_note;
+    private Integer iCount = 0;
+    private  File file;
     private static final String TAG = "PhotoTestActivity";
 
     private String mImagePath;                   //用于存储最终目录，即根目录 / 要操作（存储文件）的文件夹
@@ -75,33 +87,20 @@ public class PhotoTestActivity extends AppCompatActivity {
 
     private String courseName;                              //传过来的课程名称
 
-    private ImageView imageView;
-    private Integer iCount = 0;
-    private ProgressDialog pDialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo);
+        setContentView(R.layout.activity_album_view_photo);
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //设置状态栏颜色
+        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
         courseName=getIntent().getStringExtra("courseName");
         Log.d(TAG, "开始...");
         initOCR();
-        imageView=findViewById(R.id.photo_show);
-        button=findViewById(R.id.btn_photo);
-
-        textView=findViewById(R.id.tv_photo_bar);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showprocess();
-                getOCR(mImagePath);
-            }
-        });
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PhotoTestActivity.this.finish();
-            }
-        });
+        initData();
         // android 7.0系统解决拍照的问题
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -120,6 +119,45 @@ public class PhotoTestActivity extends AppCompatActivity {
             startCamera();
         }
 
+    }
+    void initData()
+    {
+        photoView=findViewById(R.id.pv_1);
+        btn_ocr=findViewById(R.id.ib_ocr);
+        btn_ocr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isNetworkConnected(PhotoTestActivity.this)) {
+                    showprocess();
+                    getOCR(mImagePath);
+                }
+                else
+                {
+                    Toasty.info(PhotoTestActivity.this,"没有网哦~",Toasty.LENGTH_SHORT).show();
+                }
+            }
+        });
+        btn_delete=findViewById(R.id.ib_delete);
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePhoto();
+            }
+        });
+        btn_back=findViewById(R.id.album_back);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        btn_note=findViewById(R.id.ib_note);
+        btn_note.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toasty.info(PhotoTestActivity.this,"功能还在开发中哦！",Toasty.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -215,8 +253,8 @@ public class PhotoTestActivity extends AppCompatActivity {
                     try {
                         //根据uri设置bitmap
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri);
-
-                        imageView.setImageBitmap(rotaingImageView(readPictureDegree(mImagePath),bitmap));
+                        photoView.setImageBitmap(rotaingImageView(readPictureDegree(mImagePath),bitmap));
+                        //imageView.setImageBitmap(rotaingImageView(readPictureDegree(mImagePath),bitmap));
                         //Toast.makeText(PhotoTestActivity.this,mImageUri.getPath(),Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "根据uri设置bitmap。");
                     } catch (IOException e) {
@@ -431,7 +469,7 @@ public class PhotoTestActivity extends AppCompatActivity {
                     while (iCount <= 50) {
                         // 由线程来控制进度。
                         pDialog.setProgress(iCount++);
-                        Thread.sleep(80);
+                        Thread.sleep(200);
                     }
                     pDialog.cancel();
                     //Toasty.error(PhotoTestActivity.this,"识别超时！",Toasty.LENGTH_SHORT).show();
@@ -444,6 +482,53 @@ public class PhotoTestActivity extends AppCompatActivity {
         }.start();
 
 
+    }
+    void deletePhoto()
+    {
+        file=new File(mImagePath);
+        final android.app.AlertDialog.Builder normalDialog =
+            new android.app.AlertDialog.Builder(this);
+        normalDialog.setIcon(R.mipmap.ic_launcher);
+        normalDialog.setTitle("警告");
+        normalDialog.setMessage("确认删除该照片吗？删除后不可恢复！");
+        normalDialog.setPositiveButton("确认",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(file.exists())
+                        {
+                            file.delete();
+                            Toasty.success(PhotoTestActivity.this,"删除成功",Toasty.LENGTH_SHORT).show();
+                           finish();
+                        }
+                        else
+                        {
+                            Toasty.error(PhotoTestActivity.this,"删除失败，文件不存在！",Toasty.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                });
+        normalDialog.setNegativeButton("手滑了~",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Toast.makeText(getContext(),"吓死我了···",Toast.LENGTH_SHORT).show();
+                        //Toasty.error(PhotoTestActivity.this, "吓死我了···", Toast.LENGTH_SHORT, true).show();
+                    }
+                });
+        normalDialog.show();
+    }
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
 
 }
