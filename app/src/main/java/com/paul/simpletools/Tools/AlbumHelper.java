@@ -19,6 +19,17 @@ import java.util.stream.Collectors;
  * 不会写BUG的程序猿不是好程序猿，嘤嘤嘤
  */
 public class AlbumHelper {
+    public static Boolean ifDirectoryExist()
+    {
+        String Path="/SimpleTools/photo";
+        File file=new File(Environment.getExternalStorageDirectory()+Path);
+        if(file.exists())
+        {
+            return true;
+        }
+        else
+            return false;
+    }
     public static List<MyPhotoBean> getMyPhotoBean()
     {
         String Path="/SimpleTools/photo";

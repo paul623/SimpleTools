@@ -2,4 +2,5 @@
 <paths>
     <external-path name="external_files" path="."/>
     <external-path name="my_images" path="Android/data/com.paul.simpletools/files/Pictures" />
+    <external-path name="Download" path="Download"/>
 </paths>

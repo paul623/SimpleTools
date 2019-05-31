@@ -311,7 +311,6 @@ public class OutputToCalendar extends AppCompatActivity {
                                 if(mySubject.getName().equals(item.getTitle()))
                                 {
                                     CalendarProviderManager.deleteCalendarEvent(OutputToCalendar.this, item.getId());
-                                    break;
                                 }
                             }
 

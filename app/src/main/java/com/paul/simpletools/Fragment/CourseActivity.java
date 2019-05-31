@@ -154,6 +154,7 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         linearLayout=getView().findViewById(R.id.ly_classtable);
         super.onActivityCreated(savedInstanceState);
+
         LitePal.initialize(getContext());//初始化dataBase
         headicon=getView().findViewById(R.id.course_head_icon);
         headicon.setLeftImageViewClickListener(new SuperTextView.OnLeftImageViewClickListener() {

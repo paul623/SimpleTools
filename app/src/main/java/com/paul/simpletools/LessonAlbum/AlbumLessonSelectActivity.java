@@ -49,8 +49,10 @@ public class AlbumLessonSelectActivity extends AppCompatActivity {
         listView=findViewById(R.id.album_lessonselect_lv);
         myPhotoBean=new ArrayList<>();
         names=new ArrayList<>();
-        myPhotoBean=AlbumHelper.getMyPhotoBean();
-        names=AlbumHelper.getPhotoName(myPhotoBean);
+        if(AlbumHelper.ifDirectoryExist()) {
+            myPhotoBean = AlbumHelper.getMyPhotoBean();
+            names = AlbumHelper.getPhotoName(myPhotoBean);
+        }
         adapter=new MyLessonListAdapter(myPhotoBean,names,this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

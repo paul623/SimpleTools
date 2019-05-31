@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
@@ -139,6 +138,7 @@ public class MineActivity extends Fragment {
             //设置状态栏颜色
             window.setStatusBarColor(Color.parseColor("#FFFFFF"));
         }
+
     }
 
     private void contactUs() {
