@@ -1,9 +1,18 @@
 package com.paul.simpletools.Tools;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.paul.simpletools.dataBase.MySupport;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * 作者:created by 巴塞罗那的余晖 on 2019/4/17 13：32
@@ -12,6 +21,58 @@ import java.util.Date;
  */
 public class toolsHelper {
 
+    public static void SaveTimeTable(ArrayList<String> timeclock, Context context)
+    {
+        SharedPreferences sp=context.getSharedPreferences(MySupport.DATA_COURSE_STARTTIME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sp.edit();
+        if(timeclock.size()!=12)
+        {
+            Log.d("toolsHelper","保存时间异常！");
+        }
+        else {
+            String timeString = praseListIntoString(timeclock);
+            editor.putString(MySupport.COURSE_STARTTIME, timeString);
+            editor.apply();
+        }
+    }
+    public static String[] getTimeTable(Context context)
+    {
+        SharedPreferences sp=context.getSharedPreferences(MySupport.DATA_COURSE_STARTTIME,Context.MODE_PRIVATE);
+        String result=sp.getString(MySupport.COURSE_STARTTIME,"");
+        if(result.equals(""))
+        {
+            Log.d("toolsHelper","读取时间异常！");
+        }
+        else
+        {
+            String[] re=splitStringIntoList(result);
+            return re;
+        }
+        return null;
+    }
+    private static String praseListIntoString(ArrayList<String> timeclocks)
+    {
+
+        /*规则：使用@进行连接*/
+        String result="";
+        int cont=0;
+        int end=timeclocks.size()-1;
+        for(String a:timeclocks)
+        {
+            result=result+a;
+            if(cont!=end)
+            {
+                result=result+"@";
+            }
+            cont++;
+        }
+        return result;
+    }
+    private static String[] splitStringIntoList(String a)
+    {
+        String result[]=a.split("@");
+        return result;
+    }
     public static int getWeekNumber(String local_day) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = format.parse(local_day);

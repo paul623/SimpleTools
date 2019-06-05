@@ -17,6 +17,16 @@ public class MessageEvent {
     private String background;
     private Boolean tuisong;
     private Integer hour;
+    private String[]timetable;
+
+    public String[] getTimetable() {
+        return timetable;
+    }
+
+    public void setTimetable(String[] timetable) {
+        this.timetable = timetable;
+    }
+
     private List<MySubject> mySubjects;
     public List<MySubject> getMySubjects()
     {

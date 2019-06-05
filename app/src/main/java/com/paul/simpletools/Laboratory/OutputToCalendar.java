@@ -26,6 +26,7 @@ import com.kyle.calendarprovider.calendar.CalendarEvent;
 import com.kyle.calendarprovider.calendar.CalendarProviderManager;
 import com.paul.simpletools.LaunchActivity;
 import com.paul.simpletools.R;
+import com.paul.simpletools.Tools.toolsHelper;
 import com.paul.simpletools.classbox.model.BoxLoginParams;
 import com.paul.simpletools.dataBase.EveryDayBean;
 import com.paul.simpletools.dataBase.MySubject;
@@ -114,7 +115,11 @@ public class OutputToCalendar extends AppCompatActivity {
 
     }
     CalendarEvent setCalendarEvent(MySubject mySubject) {
-
+        String timetable[]= toolsHelper.getTimeTable(OutputToCalendar.this);
+        if(timetable==null)
+        {
+            timetable=MySupport.DEFAULT_COURSE_STARTTIME;
+        }
         Calendar calendar = Calendar.getInstance();
         String name = mySubject.getName();
         String description = "第" + mySubject.getStart() + "~" + (mySubject.getStart() + mySubject.getStep() - 1) + "节" + " 老师:" + mySubject.getTeacher();
@@ -137,7 +142,7 @@ public class OutputToCalendar extends AppCompatActivity {
         } else {
             moveValue++;
         }*/
-        String starttime = MySupport.DEFAULT_COURSE_STARTTIME[mySubject.getStart()-1];
+        String starttime = timetable[mySubject.getStart()-1];
         String result[] = starttime.split(":");
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(result[0]));
         calendar.set(Calendar.MINUTE, Integer.valueOf(result[1]));

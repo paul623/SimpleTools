@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.paul.simpletools">
     <!-- 允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
@@ -10,9 +11,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
     <uses-feature android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 获取设备信息  级别 危险 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取MAC地址 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="false"
@@ -21,11 +27,17 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Laboratory.OutputToCalendar"></activity>
+        android:theme="@style/AppTheme"
+        tools:node="replace">
+        <activity android:name=".Tools.LessonTimeSelectActivity"></activity>
+        <activity android:name=".Laboratory.OutputToCalendar" />
         <activity android:name=".LessonAlbum.AlbumViewPhotoActivity" />
         <activity android:name=".LessonAlbum.AlbumPhotoSelectActivity" />
         <activity android:name=".LessonAlbum.AlbumLessonSelectActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <receiver android:name=".CourseListWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -45,6 +57,7 @@
             android:name=".Ui.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <activity android:name="com.pgyersdk.feedback.FeedbackActivity" />
         <activity android:name=".Tools.TermsManageActivity" />
         <activity
             android:name=".Ui.LoopViewActivity"
@@ -60,7 +73,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".LaunchActivity">
+        <activity
+            android:name=".LaunchActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -85,10 +100,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <provider
+            android:name="com.pgyersdk.PgyerProvider"
+            android:authorities="${applicationId}.com.pgyer.provider"
+            android:exported="false" />
 
         <receiver
             android:name=".Tools.AlarmReceiver"
             android:process=":remote" />
+
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="328f140ca3f4bff164088ab4ca0fb6d7"></meta-data>
     </application>
 
 </manifest>

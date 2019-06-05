@@ -1,61 +1,56 @@
 package com.paul.simpletools;
 
-import android.Manifest;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Build;
+
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.WindowManager;
+import android.view.KeyEvent;
+
 
 import com.paul.simpletools.Fragment.MainFragmentActivity;
-import com.paul.simpletools.dataBase.MySupport;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 
 
 public class LaunchActivity extends AppCompatActivity {
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)//透明状态栏
-        {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // 创建状态栏的管理实例
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-            // 激活状态栏设置
-            tintManager.setStatusBarTintEnabled(true);
-            // 激活导航栏设置
-            tintManager.setNavigationBarTintEnabled(true);
-            // 设置一个颜色给系统栏
-            tintManager.setTintColor(Color.parseColor("#EE6AA7"));
-
-            //Request();
-        }
-        setContentView(R.layout.activity_launch);
-        new Thread(new Runnable() {
+        // 注意：此处将setContentView()方法注释掉
+        //setContentView(R.layout.activity_launch);
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //耗时任务
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //跳转至 MainActivity
-                        //Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
-                        Intent intent = new Intent(LaunchActivity.this, MainFragmentActivity.class);
-                        startActivity(intent);
-                        //结束当前的 Activity
-                        LaunchActivity.this.finish();
-                    }
-                });
+                gotoLogin();
             }
-        }).start();
-
+        }, 0);
     }
+    private void gotoLogin() {
+        Intent intent = new Intent(LaunchActivity.this, MainFragmentActivity.class);
+        startActivity(intent);
+        finish();
+        //取消界面跳转时的动画，使启动页的logo图片与注册、登录主页的logo图片完美衔接
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (handler != null) {
+            //If token is null, all callbacks and messages will be removed.
+            handler.removeCallbacksAndMessages(null);
+        }
+        super.onDestroy();
+    }
+
 }
 

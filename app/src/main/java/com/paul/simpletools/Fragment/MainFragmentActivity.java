@@ -1,5 +1,7 @@
 package com.paul.simpletools.Fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,12 +10,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.paul.simpletools.R;
+import com.pgyersdk.crash.PgyCrashManager;
+import com.pgyersdk.feedback.PgyerFeedbackManager;
+import com.pgyersdk.update.PgyUpdateManager;
+
 public class MainFragmentActivity extends FragmentActivity {
 
     private BottomNavigationView bottomNavigationView;
@@ -21,13 +28,20 @@ public class MainFragmentActivity extends FragmentActivity {
     private MineActivity fragment2;
     private TomatoActivity fragment3;
     private Fragment[] fragments;
-
     private int lastfragment;//用于记录上个选择的Fragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_fragment);
         initFragment();
+        PgyCrashManager.register(); //注册
+        // 采用摇一摇弹出 Activity 方式
+        new PgyerFeedbackManager.PgyerFeedbackBuilder()
+                .setDisplayType(PgyerFeedbackManager.TYPE.DIALOG_TYPE)
+                .builder()
+                .register();
+        new PgyUpdateManager.Builder()
+                .register();
     }
     //初始化fragment和fragment数组
     private void initFragment()

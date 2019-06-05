@@ -45,7 +45,7 @@ public class MySupport {
 
     public static final String SD_APP_DIR_NAME = "SimpleTools"; //存储程序在外部SD卡上的根目录的名字
     public static final String PHOTO_DIR_NAME = "photo";    //存储照片在根目录下的文件夹名字
-
+    public static final String PHOTO_CORP_DIR_NAME="Background";
     public static final int PHOTO_RESULT_CODE = 100;        //标志符，图片的结果码，判断是哪一个Intent
     public static final int VOICE_RESULT_CODE = 101;        //标志符，音频的结果码，判断是哪一个Intent
     public static final int VIDEO_RESULT_CODE = 102;        //标志符，视频的结果码，判断是哪一个Intent
@@ -61,4 +61,6 @@ public class MySupport {
             "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=WE;", "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=TH;","FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=FR;",
             "FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=SA;","FREQ=WEEKLY;INTERVAL=2;WKST=MO;BYDAY=SU;"};
     public static final String CALENDAR_STATUS="laboratory_calendar_status";
+    public static final String DATA_COURSE_STARTTIME="data_course_starttime";//时间表存储名称
+    public static final String COURSE_STARTTIME="course_starttime";//用户自行设置存储课程开始时间
 }

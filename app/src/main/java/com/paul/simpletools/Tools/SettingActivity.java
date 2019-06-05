@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ import com.paul.simpletools.classbox.utils.SuperUtils;
 import com.paul.simpletools.dataBase.MessageEvent;
 import com.paul.simpletools.dataBase.MySubject;
 import com.paul.simpletools.dataBase.MySupport;
+import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
@@ -245,7 +247,9 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //课程时间设置
-                Toasty.info(SettingActivity.this,"努力开发中~",Toast.LENGTH_SHORT).show();
+                //Toasty.info(SettingActivity.this,"努力开发中~",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(SettingActivity.this,LessonTimeSelectActivity.class);
+                startActivityForResult(intent,3333);
             }
         });
         stv_13.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +275,7 @@ public class SettingActivity extends AppCompatActivity {
         messageEvent.setShow_weekend(sp.getBoolean(MySupport.CONFIG_HIDEWEEKEND,true));
         messageEvent.setShow_nweek_lesson(sp.getBoolean(MySupport.CONFIG_HIDELESOONS,false));
         messageEvent.setMySubjects(null);
+        messageEvent.setTimetable(null);
     }
 
     @Override
@@ -332,6 +337,13 @@ public class SettingActivity extends AppCompatActivity {
                     Toasty.success(SettingActivity.this,termName+"已添加并应用成功",Toasty.LENGTH_SHORT).show();
                 }
             }
+                break;
+            case 3333:
+                if(data!=null)
+                {
+                    messageEvent.setTimetable(toolsHelper.getTimeTable(SettingActivity.this));
+                }
+                break;
 
         }
 
@@ -439,6 +451,13 @@ public class SettingActivity extends AppCompatActivity {
         });
         builder.show();
     }
+   /* private void startUCrop(Uri imageUri)
+    {
+        String pathname= Environment.getExternalStorageDirectory().getAbsolutePath()
+                + "/" + MySupport.SD_APP_DIR_NAME + "/" +MySupport.PHOTO_CORP_DIR_NAME + "/";
+        Uri destinationUri=Uri.parse(pathname);
+        UCrop uCrop=UCrop.of()
+    }*/
 
 }
 

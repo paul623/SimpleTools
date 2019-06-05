@@ -38,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
-import com.paul.simpletools.CourseListWidget;
 import com.paul.simpletools.LessonAlbum.AlbumLessonSelectActivity;
 import com.paul.simpletools.PhotoTestActivity;
 import com.paul.simpletools.R;
@@ -123,8 +122,16 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         if(messageEvent.getShow_times())
         {
             OnSlideBuildAdapter listener = (OnSlideBuildAdapter) mTimetableView.onSlideBuildListener();
-            listener.setTimes(MySupport.DEFAULT_COURSE_STARTTIME)
-                    .setTimeTextColor(Color.BLACK);
+            String []timetable=toolsHelper.getTimeTable(getContext());
+            if(timetable==null) {
+                listener.setTimes(MySupport.DEFAULT_COURSE_STARTTIME)
+                        .setTimeTextColor(Color.BLACK);
+            }
+            else
+            {
+                listener.setTimes(timetable)
+                        .setTimeTextColor(Color.BLACK);
+            }
         }
         else
         {
@@ -143,12 +150,31 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
             mTimetableView.source(messageEvent.getMySubjects());
             mWeekView.updateView();
         }
-        mTimetableView.updateView();
+
         tuisong_hour=messageEvent.getHour();
         tuisong_minute=messageEvent.getMinute();
         setReminder(false);
         setReminder(cantuisong);
-
+        if(messageEvent.getTimetable()!=null)
+        {
+            SharedPreferences sp=getActivity().getSharedPreferences(MySupport.CONFIG_DATA,MODE_PRIVATE);
+            if(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false)) {
+                String[] times = messageEvent.getTimetable();
+                Log.d("测试测试","监听到刷新！");
+                OnSlideBuildAdapter listener = (OnSlideBuildAdapter) mTimetableView.onSlideBuildListener();
+                listener.setTimes(times)
+                        .setTimeTextColor(Color.BLACK);
+            }else
+            {
+                mTimetableView.callback((ISchedule.OnSlideBuildListener) null);
+                mTimetableView.updateSlideView();
+            }
+        }
+        else
+        {
+            Log.d("测试测试","为空？");
+        }
+        mTimetableView.updateView();
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -317,10 +343,11 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
             mTimetableView.maxSlideItem(10);
         }
         if(sp.getBoolean(MySupport.CONFIG_SHOWTIME,false)) {
-            String[] times = new String[]{
-                    "8:00", "8:55", "10:00", "10:55",
-                    "14:00", "14:55", "16:00", "16:55",
-                    "17:50", "18:35", "19:00", "20:00"};
+            String[] times = toolsHelper.getTimeTable(getContext());
+            if(times==null)
+            {
+                times=MySupport.DEFAULT_COURSE_STARTTIME;
+            }
             OnSlideBuildAdapter listener = (OnSlideBuildAdapter) mTimetableView.onSlideBuildListener();
             listener.setTimes(times)
                     .setTimeTextColor(Color.BLACK);
@@ -695,15 +722,66 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
     protected void Request ()
     {             //获取读写权限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//版本判断
-            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+            if (!checkAllPre())
+            {
+                final android.app.AlertDialog.Builder normalDialog =
+                        new android.app.AlertDialog.Builder(getContext());
+                normalDialog.setIcon(R.mipmap.ic_launcher);
+                normalDialog.setTitle("权限说明");
+                normalDialog.setMessage("为了本软件的正常运行，需要申请以下权限"
+                        +"\n"+"存储卡的读写权限"
+                        +"\n"+"相机权限和录音权限"
+                        +"\n"+"日历读写日历权限"
+                        +"\n"+"电话状态信息"
+                        +"\n"+"程序在使用过程中遇到的问题，都可以通过“摇一摇”的方式向我反馈" );
+                normalDialog.setPositiveButton("朕准了",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA,Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_WIFI_STATE,
+                                        Manifest.permission.RECORD_AUDIO}, 1);
+                            }
+                        });
+                normalDialog.setNegativeButton("不允许",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Toast.makeText(getContext(),"吓死我了···",Toast.LENGTH_SHORT).show();
+                                //Toasty.error(getContext(), "吓死我了···", Toast.LENGTH_SHORT, true).show();
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        });
+                normalDialog.show();
+
             }
         }
 
     }
+    public Boolean checkAllPre()
+    {
+        Boolean flag=true;
+        String premissons[]={Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.RECORD_AUDIO};
+        for(String item:premissons)
+        {
+            if(getActivity().checkSelfPermission(item) != PackageManager.PERMISSION_GRANTED)
+            {
+                flag=false;
+                Log.d("检测权限",item);
+                break;
+            }
+        }
+        return flag;
+    }
     public String getLessons(Integer curweek)//获取当前时间对应时间段并返回课程
     {
+        String[]timetable=toolsHelper.getTimeTable(getContext());
+        if(timetable==null)
+        {
+            timetable=MySupport.DEFAULT_COURSE_STARTTIME;
+        }
         String courseName="";
         int curday;
         Calendar calendar=Calendar.getInstance();
@@ -730,12 +808,12 @@ public class CourseActivity extends Fragment implements View.OnClickListener {
         }
         Log.d("课表","curday:"+curday);
         int result=-1;
-        for(int i=0;i<MySupport.DEFAULT_COURSE_STARTTIME.length-1;i++)
+        for(int i=0;i<timetable.length-1;i++)
         {
             String [] stime=new String[]{};
             String [] etime=new String[]{};
-            stime=MySupport.DEFAULT_COURSE_STARTTIME[i].split(":");
-            etime=MySupport.DEFAULT_COURSE_STARTTIME[i+1].split(":");
+            stime=timetable[i].split(":");
+            etime=timetable[i+1].split(":");
             //开始时间
             int sth = Integer.parseInt(stime[0]);//小时
             int stm = Integer.parseInt(stime[1]);//分
