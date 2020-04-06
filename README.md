@@ -1,3 +1,9 @@
+# 本项目停止维护！！！！！
+
+课表拍拍1.2.7
+[酷安下载](https://www.coolapk.com/apk/229807)
+
+[小米应用商店](http://app.mi.com/details?id=com.paul.simpletools)
 # SimpleTools
 1.0.7版本（2019.4.22）
 
@@ -19,7 +25,7 @@
 
 7.课程详情界面微调
 
-下载地址:http://t.cn/EaiUzeK
+下载地址:无
 1.0.6版本（2019.4.17）
 
 很快就可以上架应用商店了，就不需要手动更新啦~~~
